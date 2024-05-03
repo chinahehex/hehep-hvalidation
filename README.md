@@ -20,6 +20,10 @@
 git clone git@gitee.com:chinahehe/hehep-hvalidation.git
 ```
 
+- **github下载**:
+```
+git clone git@github.com:chinahehex/hehep-hvalidation.git
+```
 
 - 命令安装：
 ```

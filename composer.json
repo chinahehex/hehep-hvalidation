@@ -14,13 +14,13 @@
 
 	"autoload": {
 		"psr-4": {
-			"hehe\\core\\hvalidation\\": "./src"
+			"hehe\\core\\hvalidation\\": "src/"
 		}
 	},
 
 	"autoload-dev": {
 		"psr-4": {
-			"Tests": "./tests"
+			"Tests\\": "tests/"
 		}
 	},
 	"require-dev": {

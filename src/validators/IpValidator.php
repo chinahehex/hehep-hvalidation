@@ -56,22 +56,28 @@ class IpValidator extends Validator
         if (empty($this->mode)) {
             if ($this->ip4($value) || $this->ip6($value)) {
                 return true;
+            } else {
+                return false;
             }
         }
 
         if ($this->mode == 'ip4') {
             if ($this->ip4($value)) {
                 return true;
+            } else {
+                return false;
             }
         }
 
         if ($this->mode == 'ip6') {
             if ($this->ip6($value)) {
                 return true;
+            } else {
+                return false;
             }
         }
 
-        return true;
+        return false;
     }
 
     protected function ip4($ip)

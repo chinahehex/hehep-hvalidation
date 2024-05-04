@@ -8,3 +8,4 @@ logs
 /*.ini
 /*.txt
 /vendor
+/*.lock

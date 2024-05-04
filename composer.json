@@ -1,19 +1,29 @@
-﻿{
+{
 	"name": "hehep/hvalidation",
 	"description": "hehep-hvalidation 是一个PHP 验证器工具组件",
 	"license": "Apache-2.0",
 	"authors": [
 		{
-			"name": "hehe",
-			"email": ""
+			"name": "hehe"
 		}
 	],
+
 	"require": {
 		"php": ">=7.1"
 	},
-	"autoload-dev": {
+
+	"autoload": {
 		"psr-4": {
 			"hehe\\core\\hvalidation\\": "./src"
 		}
+	},
+
+	"autoload-dev": {
+		"psr-4": {
+			"Tests": "./tests"
+		}
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^6.2"
 	}
 }

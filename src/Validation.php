@@ -89,7 +89,9 @@ use hehe\core\hvalidation\base\Validator;
  * @method boolean number($value = '',$params = [])
  * @method boolean post($value = '',$params = [])
  * @method boolean float($value = '',$params = [])
+ * @method boolean int($value = '',$params = [])
  * @method boolean date($value = '',$params = [])
+ * @method boolean file($value = '',$params = [])
  *
  *
  * @method boolean en($value = '',$params = [])
@@ -100,7 +102,7 @@ use hehe\core\hvalidation\base\Validator;
  * @method boolean tel($value = '',$params = [])
  * @method boolean ip($value = '',$params = [])
  * @method boolean ip4($value = '',$params = [])
- * @method boolean ip5($value = '',$params = [])
+ * @method boolean ip6($value = '',$params = [])
  * @method boolean minlen($value = '',$params = [])
  * @method boolean maxlen($value = '',$params = [])
  * @method boolean eqlen($value = '',$params = [])
@@ -163,7 +165,9 @@ class Validation
         'number'=>['class'=>'NumberValidator','message'=>'请输入合法的数字'],
         'post'=>['class'=>'PostValidator','message'=>'请输入6位的合法邮编'],
         'float'=>['class'=>'FloatValidator','message'=>'请输入合法的浮点数'],
+        'int'=>['class'=>'IntValidator','message'=>'请输入合法的整数'],
         'date'=>['class'=>'DateValidator','message'=>'请输入合法的日期格式({format})'],
+        'file'=>['class'=>'FileValidator','message'=>'上传的文件格式错误!'],
 
         'en'=>['class'=>'EnglishValidator','message'=>'请输入字符必须为英文!'],
         'cn'=>['class'=>'ChineseValidator','message'=>'请输入字符必须为中文!'],

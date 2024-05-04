@@ -60,7 +60,7 @@ class Validator
      *</pre>
      * @var string
      */
-    protected $code = null;
+    protected $err_code = null;
 
     /**
      * 当验证值为空时是否调用验证
@@ -229,7 +229,7 @@ class Validator
         }
 
         if (in_array(false,$validateResultList)) {
-            return new ValidateResult(false,$this->getMessage(),[],$this->code,$this->getDefaultMessage());
+            return new ValidateResult(false,$this->getMessage(),[],$this->err_code,$this->getDefaultMessage());
         } else {
             return new ValidateResult(true);
         }
@@ -416,9 +416,9 @@ class Validator
         return $this->_params;
     }
 
-    public function getCode()
+    public function getErrorCode()
     {
-        return $this->code;
+        return $this->err_code;
     }
 
 }

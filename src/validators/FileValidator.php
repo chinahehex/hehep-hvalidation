@@ -58,7 +58,7 @@ class FileValidator extends Validator
             }
             // 检测文件后缀
             $ext = pathinfo($file['name'],PATHINFO_EXTENSION);
-            if (!$this->checkExt($file['name'])) {
+            if (!$this->checkExt($ext)) {
                 return false;
             }
 
@@ -75,7 +75,7 @@ class FileValidator extends Validator
     protected function checkSize(int $size)
     {
         $max_size = $this->max_size * 1024 * 1024;
-        if ($max_size === 0 || $size < $max_size) {
+        if ($max_size === 0 || $size <= $max_size) {
             return true;
         } else {
             return false;

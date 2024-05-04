@@ -22,7 +22,7 @@ class FloatValidator extends Validator
      *</pre>
      * @var string
      */
-    public $pattern = '/^[-\+]?(([1-9]{1}\d*)|([0]{1}))(\.(\d){point})?$/';
+    public $pattern = '/^[{symbol}]?(([1-9]{1}\d*)|([0]{1}))(\.(\d){point})?$/';
 
     /**
      * 小数点最多几位
@@ -34,6 +34,11 @@ class FloatValidator extends Validator
      */
     public $decimalPoint = 2;
 
+    /**
+     * 正负符号
+     * @var string
+     */
+    public $symbol = '';
 
     /**
      * 验证值接口
@@ -60,8 +65,15 @@ class FloatValidator extends Validator
             $pattern = $this->pattern;
         }
 
+        if ($this->symbol === '-') {
+            $pattern = str_replace('{symbol}', '-' , $pattern);
+        } else if ($this->symbol === '+') {
+            $pattern = str_replace('{symbol}', '+' , $pattern);
+        } else {
+            $pattern = str_replace('{symbol}', '-\+' , $pattern);
+        }
+
         return preg_match($pattern, $value) === 1;
     }
-
 
 }

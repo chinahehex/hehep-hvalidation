@@ -349,12 +349,12 @@ Validation::install([
 ----------|-------------|------------
 `required`  | 必填字段 | `['fieldname', ['required'] ]`
 `empty`  | 不为空字段,常配合!使用 | `['fieldname', ['empty'] ]`，`['fieldname', ['!empty'] ]`
-`float`  | 数值必须为浮点数,即整型,或带小数点的数值 | `['fieldname', ['float'] ]`
-`int`  | 数值必须为整型 | `['fieldname', ['int'] ]`
+`float`  | 数值必须为浮点数,即整型,或带小数点的数值 | `['fieldname', ['float','decimalPoint'=>'最少保留的小数点位数,如2','symbol'=>'正负符号,如-,+'] ]`
+`int`  | 数值必须为整型 | `['fieldname', ['int','symbol'=>'正负符号,如-,+'] ]`
 `boolean`  | 数值必须为布尔值,True or False | `['fieldname', ['boolean'] ]`
 `tel`  | 11 位手机号 | `['fieldname', ['tel'] ]`
-`date`  | 验证日期格式 | `['fieldname', ['date',{"format":'Y-m-d'}] ]`
-`rangedate`  | 验证日期范围 | `['fieldname', ['rangedate',"min"=>'2019-10-10','max'=>'2010-10-11'] ]`
+`date`  | 验证日期格式 | `['fieldname', ['date',["format":'Y-m-d']] ]`
+`rangedate`  | 验证日期范围 | `['fieldname', ['rangedate',"min"=>'最小日期,如2019-10-10','max'=>'最大日期,如2010-10-11'] ]`
 `email`  | 验证邮箱格式 | `['fieldname', ['email'] ]`
 `file`  | 验证表单file格式 | `['fieldname', ['file','max_size'=>0.5,'exts'=>['jpg','gif','png'],'mimes'=>['image/gif']] ]`
 `ip`  | 验证ip格式,支持mode 格式 ip4,ip6 | `['fieldname', ['ip',"mode"=>"ip4"]`

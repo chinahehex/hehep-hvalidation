@@ -88,6 +88,12 @@ if (!$validationResult->getResult()) {
     var_dump("校验成功");
 }
 
+// 验证是否手机
+Validation::tel('135xxxxxxx');
+
+// 验证是否ip
+Validation::ip('135xxxxxxx');
+
 ```
 
 - 多个验证器,支持与或(or,and,&,|)
@@ -295,7 +301,7 @@ class TelValidator extends Validator
 // 创建Validation 对象后,自动加载CommonValidators 类定义的验证规则
 $hvalidation = new Validation([
         'customValidators'=>[
-            'common\extend\validators\CommonValidators',// 需安装的验证器
+            'common\extend\validators\CommonValidators',// 需安装的验证器集合类
             [dirname(__FILE__),'\common\extend\validators'] // ['安装的目录','目录对应的命名空间']
         ]
 ]);

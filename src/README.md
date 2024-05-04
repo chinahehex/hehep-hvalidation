@@ -27,7 +27,7 @@ git clone git@github.com:chinahehex/hehep-hvalidation.git
 
 - 命令安装：
 ```
-composer require hehep-hvalidation
+composer require hehep/hvalidation
 ```
 
 ## 组件配置

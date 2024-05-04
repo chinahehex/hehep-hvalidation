@@ -66,7 +66,7 @@ class Rule
      *</pre>
      * @var string
      */
-    protected $code = null;
+    protected $err_code = null;
 
     /**
      * 场景
@@ -181,9 +181,9 @@ class Rule
      * 略
      *</pre>
      */
-    public function getCode()
+    public function getErrorCode()
     {
-        return $this->code;
+        return $this->err_code;
     }
 
     /**

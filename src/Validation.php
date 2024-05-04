@@ -548,14 +548,14 @@ class Validation
         /** @var ValidateResult $result*/
         $message = '';
         $defaultMessage = '';
-        $code = null;
+        $err_code = null;
         $validResult = true;
         foreach ($resultList as $result) {
             if ($result->getResult() === false ) {
                 $validResult = false;
                 $message = $result->getMessage();
                 $defaultMessage = $result->getDefaultMessage();
-                $code = $result->getCode();
+                $err_code = $result->getErrorCode();
                 break;
             }
         }
@@ -568,11 +568,11 @@ class Validation
                 }
             }
 
-            if (empty($code)) {
-                $code = $rule->getCode();
+            if (empty($err_code)) {
+                $err_code = $rule->getErrorCode();
             }
 
-            return new ValidateResult(false,$message,[],$code);
+            return new ValidateResult(false,$message,[],$err_code);
         } else {
             return new ValidateResult(true,'',[]);
         }
@@ -594,7 +594,7 @@ class Validation
         $message = '';
         $validResult = false;
         $defaultMessage = '';
-        $code = null;
+        $err_code = null;
         foreach ($resultList as $result) {
             if ($result->getResult() === true ) {
                 $validResult = true;
@@ -602,7 +602,7 @@ class Validation
             } else {
                 $defaultMessage = $result->getDefaultMessage();
                 $message = $result->getMessage();
-                $code = $result->getCode();
+                $err_code = $result->getErrorCode();
             }
         }
 
@@ -614,11 +614,11 @@ class Validation
                 }
             }
 
-            if (empty($code)) {
-                $code = $rule->getCode();
+            if (empty($err_code)) {
+                $err_code = $rule->getErrorCode();
             }
 
-            return new ValidateResult(false,$message,[],$code);
+            return new ValidateResult(false,$message,[],$err_code);
         } else {
             return new ValidateResult(true,'',[]);
         }

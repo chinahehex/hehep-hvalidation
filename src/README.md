@@ -41,15 +41,15 @@ composer require hehep-hvalidation
 // 验证器参数
 $validatorConf= [
     "message"=>"你输入的格式错误!",// 错误消息,
-    "code"=>null,// 错误码,非必填
-    "skipOnEmpty"=>true,// 当验证值为空时是否调用验证,true 表示　值为空时,不验证,false 表示值为空，继续验证
+    "err_code"=>null,// 错误码,非必填
+    "skipOnEmpty"=>true,// 当验证值为空时是否调用验证,true 表示值为空时不验证,false 表示值为空时继续验证
 ]
 
 // 验证规则参数
 $ruleConf = [
-    "goon"=>false,// 当验证错误是是否继续验证
+    "goon"=>false,// 当验证失败后,是否继续其他验证
     "message"=>"你输入的格式错误!",// 错误消息
-    "code"=>null,// 错误码,非必填
+    "err_code"=>null,// 错误码,非必填
     "on"=>"create",// 使用场景
     "when"=>'valint(方法或函数)',// 满足条件,规则才有效
 ]
@@ -72,7 +72,7 @@ $data = [
 // 校验规则
 $rules = [
     ['name',[['required']],'message'=>'很多的'],
-    ['age',[['required'],['number','message'=>'年龄必须为数字','code'=>-1]],'message'=>'请输入的年龄格式错误!','code'=>-2],
+    ['age',[['required'],['number','message'=>'年龄必须为数字','err_code'=>-1]],'message'=>'请输入的年龄格式错误!','err_code'=>-2],
     ['userType',[['required'],['in','numbers'=>[1,2,3,4]]],'message'=>'用户类型的值必须为1,2,3,4!'],
     ['tel',['or',['phone'],['mobile']],'message'=>'请输入手机号或固定电话'],
     
@@ -118,7 +118,7 @@ $rules = [
 
 - 验证多维数组
 ```php
-
+//@todo
 ```
 
 - 设置验证规则错误消息
@@ -150,15 +150,13 @@ function whencon($rule,$attrs) {
     return true;
 }
 
-    
-
 $rules = [
     ['attr1',[['!empty'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串','when'=>'whencon']
-]
+];
 
 $rules = [
     ['attr1',[['!empty'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串','when'=>[$this,'wwhen']]
-]
+];
 
 ```
 
@@ -318,35 +316,33 @@ Validation::install('common\extend\validators\CommonValidators');
 
 ```
 
-- **指定验证器同目录下所有验证器安装**
+- **指定验证器类同目录下所有验证器安装**
 ```php
 Validation::install('common\extend\validators\CommonValidators',true);
 
 ```
 
-- **指定验证器同级目录以及其子目录下所有验证器**
+- **指定验证器类同级目录以及其子目录下所有验证器**
 ```php
 Validation::install('common\extend\validators\CommonValidators',true,true);
 
 ```
 
-- **指定验证器前缀安装(默认前缀validator)**
+- **安装指定后缀的验证器(默认前缀validator)**
 ```php
 Validation::install('common\extend\validators\CommonValidators',true,false,'validators');
 
 ```
 
-- **指定目录安装**
+- **指定目录安装(目录下所有验证器都会安装)**
 ```php
+// 目录下所有验证器都会被安装
 Validation::install([
     dirname(__FILE__),// 安装的目录
     '\common\extend\validators',目录对应的命名空间
 ]);
 
 ```
-
-
-
 
 ## 默认验证器
 验证器 | 说明 | 规则示例

@@ -48,7 +48,7 @@ class ValidateResult
      *</pre>
      * @var string
      */
-    protected $code = null;
+    protected $err_code = null;
 
     /**
      * 默认消息
@@ -70,12 +70,12 @@ class ValidateResult
      * @param string $message
      * @param array $params
      */
-    public function __construct($result,$message = '',$params = [],$code = null,$defaultMessage = '')
+    public function __construct($result,$message = '',$params = [],$err_code = null,$defaultMessage = '')
     {
         $this->result = $result;
         $this->message = $message;
         $this->params = $params;
-        $this->code = $code;
+        $this->err_code = $err_code;
         $this->defaultMessage  = $defaultMessage;
     }
 
@@ -135,9 +135,9 @@ class ValidateResult
      * 略
      *</pre>
      */
-    public function getCode()
+    public function getErrorCode()
     {
-        return $this->code;
+        return $this->err_code;
     }
 
     public function getDefaultMessage()

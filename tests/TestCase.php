@@ -1,8 +1,9 @@
 <?php
-namespace Tests;
-require_once dirname(__DIR__) . '/vendor/autoload.php';
+namespace hvalidation\tests;
+//require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use \hehe\core\hvalidation\Validation;
+
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**

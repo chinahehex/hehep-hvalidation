@@ -67,7 +67,7 @@ class UrlValidator extends Validator
             $pattern = $this->pattern;
         }
 
-        return preg_match($pattern, $value);
+        return preg_match($pattern, $value) === 1;
     }
 
 

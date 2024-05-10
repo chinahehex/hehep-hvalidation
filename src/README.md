@@ -73,7 +73,7 @@ $data = [
 $rules = [
     ['name',[['required']],'message'=>'很多的'],
     ['age',[['required'],['number','message'=>'年龄必须为数字','err_code'=>-1]],'message'=>'请输入的年龄格式错误!','err_code'=>-2],
-    ['userType',[['required'],['in','numbers'=>[1,2,3,4]]],'message'=>'用户类型的值必须为1,2,3,4!'],
+    ['userType',[['required'],['inlist','numbers'=>[1,2,3,4]]],'message'=>'用户类型的值必须为1,2,3,4!'],
     ['tel',['or',['phone'],['mobile']],'message'=>'请输入手机号或固定电话'],
     
 ];
@@ -99,7 +99,7 @@ Validation::ip('135xxxxxxx');
 - 多个验证器,支持与或(or,and,&,|)
 ```php
 $rules = [
-    ['attr1',[['!empty'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串'],
+    ['attr1',[['required'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串'],
     ['attr1',['or',['boolean'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串或布尔型'],
 ]
 
@@ -124,14 +124,14 @@ $rules = [
 - 设置验证规则错误消息
 ```php
 $rules = [
-    ['attr1',[['!empty'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串']
+    ['attr1',[['required'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串']
 ]
 ```
 
 - 设置验证器错误消息
 ```php
 $rules = [
-    ['attr1',[['!empty'],['minlen','min'=>10,'max'=>20,'message'=>'请输入一个10-20位的字符串']],'message'=>'不能为空']
+    ['attr1',[['required'],['minlen','min'=>10,'max'=>20,'message'=>'请输入一个10-20位的字符串']],'message'=>'不能为空']
 ]
 ```
 
@@ -139,23 +139,26 @@ $rules = [
 ```php
 // on=add 用于添加规则
 $rules = [
-    ['attr1',[['!empty'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串','on'=>'add']
+    ['attr1',[['required'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串','on'=>'add']
 ]
 ```
 
 - 设置验证规则的前置条件
 ```php
-
+/**
+ * @param $rule 当前规则对象
+ * @param $attrs 传入的所有数据
+ */
 function whencon($rule,$attrs) {
     return true;
 }
 
 $rules = [
-    ['attr1',[['!empty'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串','when'=>'whencon']
+    ['attr1',[['required'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串','when'=>'whencon']
 ];
 
 $rules = [
-    ['attr1',[['!empty'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串','when'=>[$this,'wwhen']]
+    ['attr1',[['required'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串','when'=>[$this,'wwhen']]
 ];
 
 ```
@@ -171,16 +174,20 @@ $validation->addValidateType('自定义验证器别名','hehe\\core\\validate\\B
 ```php
 $rules = [
      ['attr1',[ [[$this,'func1'] ] ],'message'=>'请输入一个10-20位的字符串']
-]
+];
 ```
 
 - 验证器直接为闭包
 ```php
 $rules = [
-     ['attr1',[ [function($val){
+     ['attr1',[ [function($val,CallValidator $validator){
         // 验证结果 true or false
+        
+        // 定义的其他参数
+        $validator->params;
+        
      } ] ],'message'=>'请输入一个10-20位的字符串']
-]
+];
 ```
 
 - 直接使用验证器验证
@@ -194,7 +201,7 @@ $result = Validation::number('12',['name'=>23232]);
 ```php
 use hehe\core\hvalidation\Validation;
 $validation = new Validation();
-$validate = $validation－>createValidator('range',['min'=>10,'max'=>20]);
+$validate = $validation->createValidator('range',['min'=>10,'max'=>20]);
 $result = $validate->validate(20);
 // result : true or false
 ```
@@ -372,16 +379,18 @@ Validation::install([
 `maxlen`  | 验证字符最大长度  | `['fieldname', ['maxlen',"number"=>1]]`
 `eqlen`  | 验证字符固定长度  | `['fieldname', ['eqlen',"number"=>1]]`
 `rangelen`  | 验证字符长度范围  | `['fieldname', ['rangelen',"min"=>1,'max'=>3]]`
-`currency`  | 验证货币数值,比如0.51,支持设置小数点位数decimalPoint  | `['fieldname', ['currency',"decimalPoint"=>2]]`
-`ch`  | 验证中文格式 | `['fieldname', ['ch']]`
+`currency`  | 验证货币数值,比如0.51,decimalPoint 表示最多几位小数，默认最多2位  | `['fieldname', ['currency',"decimalPoint"=>2]]`
+`cn`  | 验证中文格式 | `['fieldname', ['ch']]`
 `en`  | 验证英文格式 | `['fieldname', ['en']]`
-`alpha`  | 验证包含字母字符[a-z_A-Z]格式 | `['fieldname', ['alpha']]`
+`card`  | 验证身份证格式 | `['fieldname', ['card']]`
+`alpha`  | 验证包含字母字符格式 | `['fieldname', ['alpha']]`
 `alphaNum`  | 验证包含字母、数字格式 | `['fieldname', ['alphaNum']]`
 `alphaDash`  | 验证字母、数字、破折号（ - ）以及下划线（ _ ）格式 | `['fieldname', ['alphaDash']]`
-`inlist`  | 输入的值必须包含在指定的列表 | `['fieldname', ['inlist']]`
-`enum`  | 输入的值必须包含在指定的列表 | `['fieldname', ['enum']]`
+`inlist`  | 输入的值或值集合必须包含在指定的列表 | `['fieldname', ['inlist',['numbers'=>['1','2','3']]]]`
+`enum`  | 输入的值必须包含在指定的列表 | `['fieldname', ['enum',['numbers'=>['1','2','3']]]]`
 `notin`  | 输入的值必须不包含在指定的列表 | `['fieldname', ['notin']]`
-`vlist`  | 验证列表里每个元素的类型 | `['fieldname', ['vlist',[ ['int'],['minlen'] ]]]`
+`vlist`  | 给列表里的每个元素指定验证器 | `['fieldname', ['vlist',[ ['int'],['minlen'] ]]]`
+`ids`  | 验证id值是否为整型 | `['fieldname', ['ids']]`
 `eqstrfield`  | 验证字段与指定字段值是否相等 | `['fieldname', ['eqstrfield',"field"=>"confirmpassword"]]]]`
 `eqintfield`  | 验证字段与指定字段数值是否相等 | `['fieldname', ['eqintfield',"field"=>"age"]]]`
 `gtintfield`  | 验证字段与指定字段数值是否大于 | `['fieldname', ['gtintfield',"field"=>"age"]]`

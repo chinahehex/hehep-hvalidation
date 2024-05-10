@@ -110,7 +110,7 @@ class Rule
     {
 
         $this->validateTypes = is_array($ruleConfig[1]) ? $ruleConfig[1] : [$ruleConfig[1]];
-        $this->attrs = is_array($ruleConfig[0]) ? $ruleConfig[0] : [$ruleConfig[0]];
+        $this->attrs = is_array($ruleConfig[0]) ? $ruleConfig[0] : explode(',',$ruleConfig[0]);
 
         unset($ruleConfig[0],$ruleConfig[1]);
 

@@ -30,6 +30,16 @@ class Validator
      *</pre>
      * @var Validation
      */
+    public $hvalidation;
+
+    /**
+     * 验证规则对象
+     *<B>说明：</B>
+     *<pre>
+     *  略
+     *</pre>
+     * @var Validation
+     */
     protected $validation = null;
 
     /**

@@ -32,7 +32,7 @@ class CallValidator extends Validator
      *</pre>
      * @var array
      */
-    protected $params = [];
+    public $params = [];
 
     public function __construct($config = [],Validation $validation = null)
     {
@@ -77,7 +77,8 @@ class CallValidator extends Validator
      */
     protected function validateValue($value,$name = null)
     {
-        $result = call_user_func_array($this->func,[$value,$this->params,$name,$this]);
+        $result = call_user_func_array($this->func,[$value,$this]);
+        
         return $result;
     }
 

@@ -47,8 +47,7 @@ class CompareValidator extends Validator
      *</pre>
      * @var int
      */
-    protected $operatorList = ['gt','egt','lt','elt'];
-
+    protected $operatorList = ['gt','egt','lt','elt','eq','>','>=','<','<=','='];
 
     /**
      * 验证值接口
@@ -81,19 +80,28 @@ class CompareValidator extends Validator
         switch ($this->operator) {
             // 大于
             case 'gt' :
+            case '>' :
                 $result = $value > $this->number;
                 break;
             // 大于等于
             case 'egt' :
+            case '>=' :
                 $result = $value >= $this->number;
                 break;
             // 小于
             case 'lt' :
+            case '<' :
                 $result = $value < $this->number;
                 break;
             // 小于等于
             case 'elt' :
+            case '<=' :
                 $result = $value <= $this->number;
+                break;
+            // 小于等于
+            case 'eq' :
+            case '=' :
+                $result = $value == $this->number;
                 break;
         }
 

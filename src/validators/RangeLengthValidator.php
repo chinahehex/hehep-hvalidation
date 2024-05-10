@@ -25,7 +25,7 @@ class RangeLengthValidator extends Validator
      *</pre>
      * @var int
      */
-    protected $min = 0;
+    protected $min = null;
 
     /**
      * 最小字符数
@@ -35,7 +35,7 @@ class RangeLengthValidator extends Validator
      *</pre>
      * @var int
      */
-    protected $max = 0;
+    protected $max = null;
 
 
     /**
@@ -51,8 +51,22 @@ class RangeLengthValidator extends Validator
     protected function validateValue($value,$name = null)
     {
         $len = $this->countLength($value);
-       
-        if ($len >= $this->min && $len <= $this->max) {
+
+        $result = true;
+
+        if (!is_null($this->min)) {
+            if ($len < $this->min) {
+                $result = false;
+            }
+        }
+
+        if (!is_null($this->max)) {
+            if ($len > $this->max) {
+                $result = false;
+            }
+        }
+
+        if ($result) {
             return true;
         } else {
             $this->addParams([

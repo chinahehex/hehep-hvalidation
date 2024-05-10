@@ -47,7 +47,7 @@ class LengthValidator extends Validator
      *</pre>
      * @var array
      */
-    protected $operatorList = ['gt','egt','lt','elt','eq'];
+    protected $operatorList = ['gt','egt','lt','elt','eq','>','>=','<','<=','='];
 
     /**
      * 验证值接口
@@ -65,6 +65,7 @@ class LengthValidator extends Validator
 
         $len = $this->countLength($value);
         $this->addParam('number',$this->number);
+
         if (!in_array($this->operator,$this->operatorList)) {
             throw  new Exception('validate type length operator invalid');
         }
@@ -75,22 +76,27 @@ class LengthValidator extends Validator
         switch ($this->operator) {
             // 大于
             case 'gt' :
+            case '>' :
                 $result = $len > $this->number;
                 break;
             // 大于等于
             case 'egt' :
+            case '>=' :
                 $result = $len >= $this->number;
                 break;
             // 小于
             case 'lt' :
+            case '<' :
                 $result = $len < $this->number;
                 break;
             // 小于等于
             case 'elt' :
+            case '<=' :
                 $result = $len <= $this->number;
                 break;
             // 小于等于
             case 'eq' :
+            case '=' :
                 $result = $len == $this->number;
                 break;
         }

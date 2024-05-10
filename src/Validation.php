@@ -120,6 +120,7 @@ use hehe\core\hvalidation\base\Validator;
  * @method boolean alphaDash($value = '',$params = [])
  * @method boolean reg($value = '',$params = [])
  * @method boolean inlist($value = '',$params = [])
+ * @method boolean vlist($value = '',$params = [])
  * @method boolean enum($value = '',$params = [])
  * @method boolean notin($value = '',$params = [])
  * @method boolean eq($value = '',$params = [])
@@ -214,6 +215,7 @@ class Validation
         'inlist'=>['class'=>'InValidator','message'=>'请输入在{numbers}范围内的字符'],
         'enum'=>['class'=>'InValidator','message'=>'请输入在{numbers}范围内的字符'],
         'notin'=>['class'=>'InValidator', 'non'=>true,'message'=>'输入的值不能为{numbers}！'],
+        'vlist'=>['class'=>'VlistValidator','message'=>'请输入合法格式字符'],
         'eq'=>['class'=>'EqualValidator','message'=>'请输入一个等于{number}的值'],
         'ids'=>['class'=>'IdsValidator','message'=>'请输入整型的值'],
         'filter'=>['class'=>'FilterValidator'],
@@ -677,10 +679,33 @@ class Validation
      */
     public function createValidator($validateType,$config = [])
     {
-
         $config = static::getValidateConfig($validateType,$config);
         $validatorclass = $config['class'];
         $validate = new $validatorclass($config,$this);
+        $validate->hvalidation = static::class;
+
+        return $validate;
+    }
+
+    /**
+     * 创建验证类
+     *<B>说明：</B>
+     *<pre>
+     *　略
+     *</pre>
+     * @param string $validateType  验证类型名称
+     * @param array $config 配置
+     * @return Validator|null
+     * @throws Exception 验证类类不存在
+     */
+    public static function makeValidator($validateType,$config = [])
+    {
+
+        $config = static::getValidateConfig($validateType,$config);
+        $validatorclass = $config['class'];
+        $validate = new $validatorclass($config,null);
+        $validate->hvalidation = static::class;
+
         return $validate;
     }
 
@@ -703,13 +728,10 @@ class Validation
 
         $config = isset($params[1]) ? $params[1] : [];
 
-        $config = static::getValidateConfig($validateType,$config);
-        $validatorclass = $config['class'];
         /**@var Validator $validator*/
-        $validator = new $validatorclass($config,null);
+        $validator = static::makeValidator($validateType,$config);
 
         return $validator->validate($params[0]);
-
     }
 
     /**
@@ -725,7 +747,16 @@ class Validation
      */
     public function __call($validateType, $params)
     {
-        return static::__callStatic($validateType,$params);
+        if (!isset(self::$validators[$validateType])) {
+            throw new Exception('method not exists:' . __CLASS__ . '->' . $validateType);
+        }
+
+        $config = isset($params[1]) ? $params[1] : [];
+
+        /**@var Validator $validator*/
+        $validator = $this->createValidator($validateType,$config);
+
+        return $validator->validate($params[0]);
     }
 
     protected static function getValidateConfig($validateType,$config = [])

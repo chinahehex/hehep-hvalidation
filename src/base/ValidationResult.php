@@ -74,7 +74,7 @@ class ValidationResult
 
     public function getFirstCode()
     {
-        return $this->firstValidResult->getCode();
+        return $this->firstValidResult->getErrorCode();
     }
 
     public function getErrors()
@@ -86,6 +86,9 @@ class ValidationResult
     {
 
         $this->validatorResults[] = $validatorResult;
+        if (is_null($this->firstValidResult) && count($this->validatorResults) == 1) {
+            $this->firstValidResult = $validatorResult;
+        }
     }
 
 

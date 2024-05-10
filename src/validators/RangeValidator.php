@@ -34,7 +34,7 @@ class RangeValidator extends Validator
      *</pre>
      * @var int
      */
-    protected $min = 0;
+    protected $min = null;
 
     /**
      * 最大数值
@@ -44,7 +44,7 @@ class RangeValidator extends Validator
      *</pre>
      * @var int
      */
-    protected $max = 0;
+    protected $max = null;
 
 
     /**
@@ -59,13 +59,21 @@ class RangeValidator extends Validator
      */
     protected function validateValue($value,$name = null)
     {
-        // 必须是有效的数值
-        $reg = '/^[-\+]?\d+(\.\d+)?$/';
-        if (preg_match($reg,$value) !== 1) {
-            return false;
+        $result = true;
+
+        if (!is_null($this->min)) {
+            if ($value < $this->min) {
+                $result = false;
+            }
         }
-       
-        if ($value >= $this->min && $value <= $this->max) {
+
+        if (!is_null($this->max)) {
+            if ($value > $this->max) {
+                $result = false;
+            }
+        }
+
+        if ($result) {
             return true;
         } else {
             $this->addParams([

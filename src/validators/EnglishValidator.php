@@ -12,10 +12,10 @@ use hehe\core\hvalidation\base\Validator;
  *<B>示例：</B>
  *<pre>
  *  规则格式:
- * ['attrs',[['cn']],'message'=>'请输入一个合法的中文字符']
+ * ['attrs',[['en']],'message'=>'请输入一个合法的英文字符']
  *</pre>
  */
-class ChineseValidator extends Validator
+class EnglishValidator extends Validator
 {
 
     /**
@@ -26,7 +26,7 @@ class ChineseValidator extends Validator
      *</pre>
      * @var string
      */
-    protected $pattern = '/^[\x{4e00}-\x{9fa5}]+$/u';
+    protected $pattern = '/^[A-Za-z ]+$/';
 
     /**
      * 验证值接口

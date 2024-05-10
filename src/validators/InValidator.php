@@ -40,7 +40,16 @@ class InValidator extends Validator
      */
     protected function validateValue($value,$name = null)
     {
-        if (in_array($value,$this->numbers)) {
+        $result = true;
+        $val_list = explode(',',$value);
+        foreach ($val_list as $val) {
+            if (!in_array($val,$this->numbers)) {
+                $result = false;
+                break;
+            }
+        }
+
+        if ($result) {
             return true;
         } else {
             $this->addParam('numbers',implode(',',$this->numbers));

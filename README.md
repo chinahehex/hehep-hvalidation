@@ -17,7 +17,7 @@
 ## 安装
 - **gitee下载**:
 ```
-git clone git@gitee.com:chinahehe/hehep-hvalidation.git
+git clone git@gitee.com:chinahehex/hehep-hvalidation.git
 ```
 
 - **github下载**:

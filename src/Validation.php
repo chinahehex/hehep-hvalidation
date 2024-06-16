@@ -334,25 +334,7 @@ class Validation
 
         return $this;
     }
-
-
-
-    /**
-     * 根据场景验证入口
-     *<B>说明：</B>
-     *<pre>
-     *　略
-     *</pre>
-     * @param array $scenes 验证场景['场景1','场景2',...]
-     * @param array $rules 验证规则
-     * @param array $attributes 格式 ['key'=>'name',...]
-     * @return ValidationResult
-     * @throws Exception
-     */
-    public function validateScene($scenes = [],$rules,$attributes)
-    {
-        return $this->validate($rules,$attributes,$scenes);
-    }
+    
 
     /**
      * 获取有效的验证规则

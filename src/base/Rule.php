@@ -219,7 +219,7 @@ class Rule
     public function isActive($scenes = [],$attributes = [])
     {
 
-        if (!empty($this->on) && ($this->on != self::DEFUALT_SCENE || !in_array($this->on,$scenes))) {
+        if (!empty($this->on) && ($this->on != self::DEFUALT_SCENE && !in_array($this->on,$scenes))) {
             return false;
         }
 

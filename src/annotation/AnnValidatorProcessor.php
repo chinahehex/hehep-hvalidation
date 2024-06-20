@@ -1,61 +1,61 @@
 <?php
 namespace hehe\core\hvalidation\annotation;
 
-use hehe\core\hannotation\base\AnnotationProcessor;
+use hehe\core\hcontainer\ann\base\AnnotationProcessor;
 use hehe\core\hvalidation\Validation;
-
 
 class AnnValidatorProcessor extends AnnotationProcessor
 {
     /**
-     * 验证器规则列表
-     * @var array
-     */
-    protected $validators = [];
-
-    /**
      * 注解转换成验证规则
      * @param object $annotation
      */
-    protected function toValidatRule($annotation)
+    protected function annotationToValidateRule($annotation)
     {
-        $annotationAttrs = $this->getAttribute($annotation);
-        $validatorRule = [];
+        $annAttrs = $this->getAttribute($annotation);
+        $validateRule = [];
+        $validateRule[0] = '';
+        $validateRule[1] = [];
 
-        $validatorRule[0] = $annotationAttrs['name'];
-        $validatorRule[1] = $annotationAttrs['validator'];
-        if ($annotationAttrs['on'] !== null) {
-            $validatorRule['on'] = $annotationAttrs['on'];
+        $validator = '';
+        $attr_names = ['name','validator','on','when','goon','message'];
+        foreach ($attr_names as $key) {
+            if (isset($annAttrs[$key])) {
+                if ($key == 'name') {
+                    $validateRule[0] = $annAttrs[$key];
+                } else if ($key == 'validator') {
+                    $validator = $annAttrs[$key];
+                } else {
+                    $validateRule[$key] = $annAttrs[$key];
+                }
+            }
+
+            unset($annAttrs[$key]);
         }
 
-        if ($annotationAttrs['goon'] !== null) {
-            $validatorRule['goon'] = $annotationAttrs['goon'];
+        $validator_rule = $annAttrs;
+        if (is_array($validator)) {
+            $validateRule[1] = $validator;
+        } else {
+            array_unshift($validator_rule,$validator);
+            $validateRule[1] = [$validator_rule];
         }
 
-        return $validatorRule;
+        return $validateRule;
     }
 
     // 属性处理
-    protected function annotationHandlerAttribute($annotation,$clazz,$attribute)
+    protected function handleAnnotationProperty($annotation,string $class,string $property):void
     {
-        $validatorRule = $this->toValidatRule($annotation);
-        $validatorRule[0] = $attribute;
+        $validatorRule = $this->annotationToValidateRule($annotation);
+        $validatorRule[0] = $property;
 
-        $this->validators[$clazz][] = $validatorRule;
+        Validation::addRule($class,$validatorRule);
     }
 
-    protected function annotationHandlerMethod($annotation,$clazz,$method)
+    protected function handleAnnotationMethod($annotation,string $class,string $method):void
     {
-        $validatorRule = $this->toValidatRule($annotation);
-        $this->validators[$clazz .'@'.$method][] = $validatorRule;
-    }
-
-    public function getAnnotationors(string $class_key = '')
-    {
-        if (isset($this->validators[$class_key])) {
-            return $this->validators[$class_key];
-        } else {
-            return [];
-        }
+        $validatorRule = $this->annotationToValidateRule($annotation);
+        Validation::addRule($class .'@'.$method,$validatorRule);
     }
 }

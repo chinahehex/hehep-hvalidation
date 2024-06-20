@@ -1,15 +1,14 @@
 <?php
 namespace hehe\core\hvalidation\annotation;
-use  hehe\core\hannotation\base\Annotation;
+use hehe\core\hcontainer\ann\base\Annotation;
+use Attribute;
 
 /**
  * @Annotation("hehe\core\hvalidation\annotation\AnnValidatorProcessor")
  */
-class RequiredValid extends AnnValidator
+#[Attribute]
+class RequiredValid extends Validator
 {
-    public function __construct($attrs = [])
-    {
-        parent::__construct($attrs);
-        $this->validator[0] = 'required';
-    }
+    public $validator = 'required';
+
 }

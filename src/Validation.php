@@ -303,18 +303,39 @@ class Validation
      *<pre>
      * 略
      *</pre>
-     * @param string $clazz 目标类路径
+     * @param string $class 目标类路径
      * @param array $rule 验证规则
      * @return $this
      */
-    public static function addRule($clazz,$rule)
+    public static function addRule(string $keyword,array $rule):void
     {
-        static::$rules[$clazz][] = $rule;
+        static::$rules[$keyword][] = $rule;
     }
 
-    public static function getRule($clazz)
+    public static function getRule(string $keyword):array
     {
-        return isset(static::$rules[$clazz]) ? static::$rules[$clazz] : [];
+        return isset(static::$rules[$keyword]) ? static::$rules[$keyword] : [];
+    }
+
+    /**
+     * 获取类属性的验证的规则
+     * @param string $class
+     * @return array
+     */
+    public function getClassRule(string $class)
+    {
+        return static::getRule($class);
+    }
+
+    /**
+     * 获取类方法的验证的规则
+     * @param string $class
+     * @param string $method
+     * @return array
+     */
+    public function getMethodRule(string $class,string $method)
+    {
+        return static::getRule($class . "@" . $method);
     }
 
     /**
@@ -334,7 +355,7 @@ class Validation
 
         return $this;
     }
-    
+
 
     /**
      * 获取有效的验证规则

@@ -1,23 +1,13 @@
 <?php
 namespace hehe\core\hvalidation\annotation;
-use  hehe\core\hannotation\base\Annotation;
+use  hehe\core\hcontainer\ann\base\Annotation;
+use Attribute;
 /**
  * @Annotation("hehe\core\hvalidation\annotation\AnnValidatorProcessor")
  */
-class FilterValid extends AnnValidator
+#[Attribute]
+class FilterValid extends Validator
 {
+    public $validator = 'filter';
 
-    /**
-     * 构造方法
-     *<B>说明：</B>
-     *<pre>
-     *  略
-     *</pre>
-     * @param array $attrs
-     */
-    public function __construct($attrs = [])
-    {
-        parent::__construct($attrs);
-        $this->validator[0] = 'filter';
-    }
 }

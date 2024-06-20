@@ -2,6 +2,7 @@
 namespace hehe\core\hvalidation\validators;
 
 use hehe\core\hvalidation\base\Validator;
+use hehe\core\hvalidation\Validation;
 
 /**
  * in验证类
@@ -27,6 +28,15 @@ class InValidator extends Validator
      * @var array
      */
     protected $numbers = [];
+
+    public function __construct($config = [],Validation $validation = null)
+    {
+        parent::__construct($config, $validation);
+
+        if (is_string($this->numbers)) {
+            $this->numbers = explode(',',$this->numbers);
+        }
+    }
 
     /**
      * 验证值接口

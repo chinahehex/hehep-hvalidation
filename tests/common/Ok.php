@@ -1,75 +1,61 @@
 <?php
-namespace hehe\core\hvalidation\annotation;
-
+namespace hvalidation\tests\common;
+use hehe\core\hcontainer\ann\base\Ann;
 use hehe\core\hcontainer\ann\base\Annotation;
+
 use Attribute;
+
 /**
- * 验证注解器
  * @Annotation("hehe\core\hvalidation\annotation\AnnValidatorProcessor")
  */
 #[Attribute]
-class Validator
+class Ok
 {
 
-    // 验证器
-    public $validator;
-
-    // 提示消息
-    public $message;
-
-    // 满足触发规则条件
-    public $when;
-
-    // 场景
-    public $on;
-
-    // 验证器错误后，是否继续验证其他验证器
-    public $goon;
-
-    /**chua
-     * 验证的键名
-     * @var string
-     */
     public $name;
 
-    /**
-     * 构造方法
-     *<B>说明：</B>
-     *<pre>
-     *  略
-     *</pre>
-     * @param array $attrs
-     */
+    public $age;
+
+    public $type;
+
+    public $date;
+
     public function __construct(...$value)
     {
-        $this->injectArgParams($value,'message');
+        var_dump($value);
+        var_dump($this->getArgParams($value,'name'));
     }
+
+//    public function __construct($value = null,?int $age = null,string $type = null,string $date = null,string $name = null)
+//    {
+//        var_dump(func_get_args());
+//    }
+
 
     /**
      * 获取格式化后参数
      * @param array $args 构造参数
      * @param string $value_name 第一个构造参数对应的属性名
      * @return array
+     * @throws \ReflectionException
      */
-    protected function getArgParams(array $args = [],string $value_name = 'message'):array
+    protected function getArgParams(array $args = [],string $value_name = ''):array
     {
         // php 注解
         $values = [];
         if (!empty($args)) {
-            if (isset($args[0]) && (is_string($args[0]) || is_null($args[0]))) {
+            if (is_string($args[0]) || is_null($args[0])) {
                 foreach ($args as $index=>$val) {
                     if (is_numeric($index)) {
-                        if ($index == 0) {
-                            $values[$value_name] = $args[$index];
-                        }
+                       if ($index == 0) {
+                           $values[$value_name] = $args[$index];
+                       }
                     } else {
                         $values[$index] = $args[$index];
                     }
                 }
-            } else if (isset($args[0]) && is_array($args[0])) {
+            } else if (is_array($args[0])) {
                 $values = $args[0];
-            } else {
-                $values = $args;
             }
         }
 

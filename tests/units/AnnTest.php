@@ -56,11 +56,13 @@ class AnnTest extends TestCase
             'name'=>"hehe",// 用户姓名
             'age'=>2,// 年龄
             'userType'=>4,// 用户类型
-            'tel'=>'13811111111',// 联系方式
+            //'tel'=>'13811111111',// 联系方式
+            'tel'=>'0898-15212532',// 联系方式
         ];
 
         // 校验规则
         $rules = Validation::getRule(User::class.'@add');
+
         $validationResult = $this->hvalidation->validate($rules,$data);
 
         $this->assertTrue($validationResult->getResult());

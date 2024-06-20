@@ -2,6 +2,7 @@
 namespace hehe\core\hvalidation\validators;
 
 use hehe\core\hvalidation\base\Validator;
+use hehe\core\hvalidation\Validation;
 
 /**
  * 过滤字段
@@ -63,12 +64,12 @@ class FilterValidator extends Validator
      *　略
      *</pre>
      * @param array $config　类属性
-     * @param ValidateManager $validateManager　验证管理类
+     * @param Validation $validation　验证管理类
      */
-    public function __construct($config = [],ValidateManager $validateManager = null)
+    public function __construct($config = [],Validation $validation = null)
     {
 
-        parent::__construct($config,$validateManager);
+        parent::__construct($config,$validation);
 
         // 查找value 在 call 参数的位置
         $valuePos = 0;

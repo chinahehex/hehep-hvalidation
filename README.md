@@ -390,12 +390,12 @@ class UserController
     public $tel;
 
     /**
-     * @RequiredValid("姓名不能为空",name="name")
+     * @RequiredValid(message="姓名不能为空",name="name")
      * @RequiredValid("姓名不能为空",name="age")
      * @NumberValid("请输入的年龄格式错误",name="age")
      * @RequiredValid("请选择用户类型",name="userType")
-     * @InlistValid("用户类型的值必须为1,2,3,4!",name="userType",numbers="1,2,3,4")
-     * @MobileValid("手机号码",name="tel")
+     * @InlistValid("用户类型的值必须为1,2,3,4!",name="userType",numbers={1,2,3,4})
+     * @Validator("手机号码",name="tel",validator={"or",{"mobile"},{"phone"}})
      */
     public function add(){}
 
@@ -405,7 +405,7 @@ class UserController
      * @NumberValid("请输入的年龄格式错误",name="age")
      * @RequiredValid("请选择用户类型",name="userType")
      */
-    #[InlistValid("用户类型的值必须为1,2,3,4!",name:"userType",numbers:"1,2,3,4")]
+    #[InlistValid(message:"用户类型的值必须为1,2,3,4!",name:"userType",numbers:"1,2,3,4")]
     #[Validator("联系电话错误",name:"tel",validator:array('or',array('mobile'),array('phone')))]
     public function add1(){}
 }

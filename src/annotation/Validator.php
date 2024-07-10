@@ -7,6 +7,7 @@ use Attribute;
  * 验证注解器
  * @Annotation("hehe\core\hvalidation\annotation\AnnValidatorProcessor")
  */
+#[Annotation("hehe\core\hvalidation\annotation\AnnValidatorProcessor")]
 #[Attribute]
 class Validator
 {

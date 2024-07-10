@@ -43,7 +43,7 @@ $validatorConf= [
     "message"=>"你输入的格式错误!",// 错误消息,
     "err_code"=>null,// 错误码,非必填
     "skipOnEmpty"=>true,// 当验证值为空时是否调用验证,true 表示值为空时不验证,false 表示值为空时继续验证
-]
+];
 
 // 验证规则参数
 $ruleConf = [
@@ -52,7 +52,7 @@ $ruleConf = [
     "err_code"=>null,// 错误码,非必填
     "on"=>"create",// 使用场景
     "when"=>'valint(方法或函数)',// 满足条件,规则才有效
-]
+];
 ```
 ## 基本示例
 

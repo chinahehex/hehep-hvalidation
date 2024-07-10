@@ -5,6 +5,7 @@ use Attribute;
 /**
  * @Annotation("hehe\core\hvalidation\annotation\AnnValidatorProcessor")
  */
+#[Annotation("hehe\core\hvalidation\annotation\AnnValidatorProcessor")]
 #[Attribute]
 class PhoneValid extends Validator
 {

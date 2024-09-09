@@ -60,7 +60,7 @@ class Validator
      *</pre>
      * @var string
      */
-    protected $defaultMessage = '';
+    protected $defmsg = '';
 
     /**
      * 错误码
@@ -316,28 +316,20 @@ class Validator
      */
     public function getMessage()
     {
-        $message = $this->message;
-
-        if (empty($message)) {
+        if (empty($this->message)) {
             return '';
+        } else {
+            return  $this->formatMessage($this->message,$this->_params);
         }
-
-        // 格式化消息
-        $message = $this->formatMessage($message,$this->_params);
-        return $message;
     }
 
     public function getDefaultMessage()
     {
-        $message = $this->defaultMessage;
-
-        if (empty($message)) {
+        if (empty($this->defmsg)) {
             return '';
+        } else {
+            return $this->formatMessage($this->defmsg,$this->_params);
         }
-
-        // 格式化消息
-        $message = $this->formatMessage($message,$this->_params);
-        return $message;
     }
 
     /**

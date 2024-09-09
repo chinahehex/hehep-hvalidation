@@ -86,7 +86,7 @@ class ValidationResult
     {
 
         $this->validatorResults[] = $validatorResult;
-        if (is_null($this->firstValidResult) && count($this->validatorResults) == 1) {
+        if (is_null($this->firstValidResult) && $validatorResult->getResult() === false) {
             $this->firstValidResult = $validatorResult;
         }
     }

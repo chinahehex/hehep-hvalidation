@@ -167,7 +167,7 @@ $rules = [
 ```php
 use hehe\core\hvalidation\Validation;
 $hvalidation = new Validation();
-$validation->addValidateType('自定义验证器别名','hehe\\core\\validate\\BooleanValidate','自定义消息内容');
+$validation->addValidator('自定义验证器别名','hehe\\core\\validate\\BooleanValidate','自定义消息内容');
 ```
 
 - 验证器直接为方法或函数

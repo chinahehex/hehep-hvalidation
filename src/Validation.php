@@ -51,7 +51,7 @@ use hehe\core\hvalidation\base\Validator;
  *
  * e.g 新增验证类型
  * $validation = new Validation();
- * $validation->addValidateType('customType','hehe\\core\\validate\\BooleanValidate','自定义消息内容');
+ * $validation->addValidator('customType','hehe\\core\\validate\\BooleanValidate','自定义消息内容');
  *
  * e.g 直接实例化验证类，调用验证类方法
  * $validation = new Validation();
@@ -156,68 +156,68 @@ class Validation
      * @param array
      */
     protected static $validators = [
-        'boolean'=>['class'=>'BooleanValidator','message'=>'请输入一个布尔值'],
-        'string'=>['class'=>'StringValidator','message'=>'请输入一个字符串'],
-        'empty'=>['class'=>'EmptyValidator','message'=>'您输入的值必须为空'],
-        'email'=>['class'=>'EmailValidator','message'=>'请输入正确格式的电子邮件'],
-        'required'=>['class'=>'RequiredValidator','message'=>'必须字段'],
-        'url'=>['class'=>'UrlValidator','message'=>'请输入正确格式url 地址'],
-        'currency'=>['class'=>'CurrencyValidator','message'=>'请输入正确的货币格式'],
-        'number'=>['class'=>'NumberValidator','message'=>'请输入合法的数字'],
-        'post'=>['class'=>'PostValidator','message'=>'请输入6位的合法邮编'],
-        'float'=>['class'=>'FloatValidator','message'=>'请输入合法的浮点数'],
-        'int'=>['class'=>'IntValidator','message'=>'请输入合法的整数'],
-        'date'=>['class'=>'DateValidator','message'=>'请输入合法的日期格式({format})'],
-        'file'=>['class'=>'FileValidator','message'=>'上传的文件格式错误!'],
+        'boolean'=>['class'=>'BooleanValidator','defmsg'=>'请输入一个布尔值'],
+        'string'=>['class'=>'StringValidator','defmsg'=>'请输入一个字符串'],
+        'empty'=>['class'=>'EmptyValidator','defmsg'=>'您输入的值必须为空'],
+        'email'=>['class'=>'EmailValidator','defmsg'=>'请输入正确格式的电子邮件'],
+        'required'=>['class'=>'RequiredValidator','defmsg'=>'必须字段'],
+        'url'=>['class'=>'UrlValidator','defmsg'=>'请输入正确格式url 地址'],
+        'currency'=>['class'=>'CurrencyValidator','defmsg'=>'请输入正确的货币格式'],
+        'number'=>['class'=>'NumberValidator','defmsg'=>'请输入合法的数字'],
+        'post'=>['class'=>'PostValidator','defmsg'=>'请输入6位的合法邮编'],
+        'float'=>['class'=>'FloatValidator','defmsg'=>'请输入合法的浮点数'],
+        'int'=>['class'=>'IntValidator','defmsg'=>'请输入合法的整数'],
+        'date'=>['class'=>'DateValidator','defmsg'=>'请输入合法的日期格式({format})'],
+        'file'=>['class'=>'FileValidator','defmsg'=>'上传的文件格式错误!'],
 
-        'en'=>['class'=>'EnglishValidator','message'=>'请输入字符必须为英文!'],
-        'cn'=>['class'=>'ChineseValidator','message'=>'请输入字符必须为中文!'],
-        'card'=>['class'=>'CardValidator','message'=>'请输入15或18位身份证号码'],
-        'phone'=>['class'=>'PhoneValidator','message'=>'请输入带区号的固定电话号码'],
-        'mobile'=>['class'=>'MobileValidator','message'=>'请输入11位手机号码'],
-        'tel'=>['class'=>'MobileValidator','message'=>'请输入11位手机号码'],
-        'ip'=>['class'=>'IpValidator','message'=>'你的输入ip 格式有误'],
-        'ip4'=>['class'=>'IpValidator', 'mode'=>'ip4','message'=>'你的输入ip 格式有误'],
-        'ip6'=>['class'=>'IpValidator', 'mode'=>'ip6','message'=>'你的输入ip 格式有误'],
-        'eqlen'=>['class'=>'LengthValidator', 'operator'=>'eq','message'=>'请输入一个长度是 {number} 的字符串'],
-        'minlen'=>['class'=>'LengthValidator', 'operator'=>'egt','message'=>'请输入一个长度最少是 {number} 的字符串'],
-        'maxlen'=>['class'=>'LengthValidator', 'operator'=>'elt','message'=>'请输入一个长度最多是 {number} 的字符串'],
+        'en'=>['class'=>'EnglishValidator','defmsg'=>'请输入字符必须为英文!'],
+        'cn'=>['class'=>'ChineseValidator','defmsg'=>'请输入字符必须为中文!'],
+        'card'=>['class'=>'CardValidator','defmsg'=>'请输入15或18位身份证号码'],
+        'phone'=>['class'=>'PhoneValidator','defmsg'=>'请输入带区号的固定电话号码'],
+        'mobile'=>['class'=>'MobileValidator','defmsg'=>'请输入11位手机号码'],
+        'tel'=>['class'=>'MobileValidator','defmsg'=>'请输入11位手机号码'],
+        'ip'=>['class'=>'IpValidator','defmsg'=>'你的输入ip 格式有误'],
+        'ip4'=>['class'=>'IpValidator', 'mode'=>'ip4','defmsg'=>'你的输入ip 格式有误'],
+        'ip6'=>['class'=>'IpValidator', 'mode'=>'ip6','defmsg'=>'你的输入ip 格式有误'],
+        'eqlen'=>['class'=>'LengthValidator', 'operator'=>'eq','defmsg'=>'请输入一个长度是 {number} 的字符串'],
+        'minlen'=>['class'=>'LengthValidator', 'operator'=>'egt','defmsg'=>'请输入一个长度最少是 {number} 的字符串'],
+        'maxlen'=>['class'=>'LengthValidator', 'operator'=>'elt','defmsg'=>'请输入一个长度最多是 {number} 的字符串'],
 
-        'rangelen'=>['class'=>'RangeLengthValidator','message'=>'请输入一个长度介于 {min} 和 {max} 之间的字符串'],
-        'rangedate'=>['class'=>'RangeDateValidator','message'=>'请输入一个范围介于 {min} 和 {max} 之间的日期'],
+        'rangelen'=>['class'=>'RangeLengthValidator','defmsg'=>'请输入一个长度介于 {min} 和 {max} 之间的字符串'],
+        'rangedate'=>['class'=>'RangeDateValidator','defmsg'=>'请输入一个范围介于 {min} 和 {max} 之间的日期'],
 
-        'compare'=>['class'=>'CompareValidator','message'=>'请输入合法的值！'],
-        'gt'=>['class'=>'CompareValidator', 'operator'=>'gt','message'=>'请输入一个大于{number} 的数值！'],
-        'egt'=>['class'=>'CompareValidator', 'operator'=>'egt','message'=>'请输入一个大于等于 {number} 的数值！'],
-        'lt'=>['class'=>'CompareValidator', 'operator'=>'lt','message'=>'请输入一个小于 {number} 的数值！'],
-        'elt'=>['class'=>'CompareValidator', 'operator'=>'elt','message'=>'请输入一个小于等于{number} 的数值！'],
+        'compare'=>['class'=>'CompareValidator','defmsg'=>'请输入合法的值！'],
+        'gt'=>['class'=>'CompareValidator', 'operator'=>'gt','defmsg'=>'请输入一个大于{number} 的数值！'],
+        'egt'=>['class'=>'CompareValidator', 'operator'=>'egt','defmsg'=>'请输入一个大于等于 {number} 的数值！'],
+        'lt'=>['class'=>'CompareValidator', 'operator'=>'lt','defmsg'=>'请输入一个小于 {number} 的数值！'],
+        'elt'=>['class'=>'CompareValidator', 'operator'=>'elt','defmsg'=>'请输入一个小于等于{number} 的数值！'],
         'range'=>['class'=>'RangeValidator','message'=>'请输入一个合法的{min}-{max}数值！'],
 
-        'alpha'=>['class'=>'CharValidator', 'mode'=>'alpha','message'=>'请输入的字符必须包含字母字符！'],
-        'alphaNum'=>['class'=>'CharValidator', 'mode'=>'alphaNum','message'=>'请输入的字符必须包含字母、数字！'],
-        'alphaDash'=>['class'=>'CharValidator', 'mode'=>'alphaDash','message'=>'请输入的字符包含字母、数字、破折号（ - ）以及下划线（ _ ）！'],
+        'alpha'=>['class'=>'CharValidator', 'mode'=>'alpha','defmsg'=>'请输入的字符必须包含字母字符！'],
+        'alphaNum'=>['class'=>'CharValidator', 'mode'=>'alphaNum','defmsg'=>'请输入的字符必须包含字母、数字！'],
+        'alphaDash'=>['class'=>'CharValidator', 'mode'=>'alphaDash','defmsg'=>'请输入的字符包含字母、数字、破折号（ - ）以及下划线（ _ ）！'],
 
-        'eqstrfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'str','operator'=>'eq','message'=>'输入的{field1}与{field2}的值必须相等'],
+        'eqstrfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'str','operator'=>'eq','defmsg'=>'输入的{field1}与{field2}的值必须相等'],
 
-        'eqintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'eq','message'=>'输入的{field1}与{field2}的值必须相等'],
-        'gtintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'gt','message'=>'请输入{field2} 的值必须大于{field1}！'],
-        'egtintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'egt','message'=>'请输入{field2} 的值必须大于等于{field1}！'],
-        'ltintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'lt','message'=>'请输入{field2} 的值必须小于{field1}！'],
-        'eltintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'elt','message'=>'请输入{field2} 的值必须小于等于{field1}！'],
+        'eqintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'eq','defmsg'=>'输入的{field1}与{field2}的值必须相等'],
+        'gtintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'gt','defmsg'=>'请输入{field2} 的值必须大于{field1}！'],
+        'egtintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'egt','defmsg'=>'请输入{field2} 的值必须大于等于{field1}！'],
+        'ltintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'lt','defmsg'=>'请输入{field2} 的值必须小于{field1}！'],
+        'eltintfield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'int','operator'=>'elt','defmsg'=>'请输入{field2} 的值必须小于等于{field1}！'],
 
-        'eqdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'eq','message'=>'输入的{field1}与{field2}的值必须相等'],
-        'gtdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'gt','message'=>'请输入{field2} 的值必须大于{field1}！'],
-        'egtdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'egt','message'=>'请输入{field2} 的值必须大于等于{field1}！'],
-        'ltdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'lt','message'=>'请输入{field2} 的值必须小于{field1}！'],
-        'eltdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'elt','message'=>'请输入{field2} 的值必须小于等于{field1}！'],
+        'eqdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'eq','defmsg'=>'输入的{field1}与{field2}的值必须相等'],
+        'gtdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'gt','defmsg'=>'请输入{field2} 的值必须大于{field1}！'],
+        'egtdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'egt','defmsg'=>'请输入{field2} 的值必须大于等于{field1}！'],
+        'ltdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'lt','defmsg'=>'请输入{field2} 的值必须小于{field1}！'],
+        'eltdatefield'=>['class'=>'CompareFieldValidator', 'comparetype'=>'date','operator'=>'elt','defmsg'=>'请输入{field2} 的值必须小于等于{field1}！'],
 
-        'reg'=>['class'=>'RegularValidator','message'=>'请输入合法格式字符'],
-        'inlist'=>['class'=>'InValidator','message'=>'请输入在{numbers}范围内的字符'],
-        'enum'=>['class'=>'InValidator','message'=>'请输入在{numbers}范围内的字符'],
-        'notin'=>['class'=>'InValidator', 'non'=>true,'message'=>'输入的值不能为{numbers}！'],
-        'vlist'=>['class'=>'VlistValidator','message'=>'请输入合法格式字符'],
-        'eq'=>['class'=>'EqualValidator','message'=>'请输入一个等于{number}的值'],
-        'ids'=>['class'=>'IdsValidator','message'=>'请输入整型的值'],
+        'reg'=>['class'=>'RegularValidator','defmsg'=>'请输入合法格式字符'],
+        'inlist'=>['class'=>'InValidator','defmsg'=>'请输入在{numbers}范围内的字符'],
+        'enum'=>['class'=>'InValidator','defmsg'=>'请输入在{numbers}范围内的字符'],
+        'notin'=>['class'=>'InValidator', 'non'=>true,'defmsg'=>'输入的值不能为{numbers}！'],
+        'vlist'=>['class'=>'VlistValidator','defmsg'=>'请输入合法格式字符'],
+        'eq'=>['class'=>'EqualValidator','defmsg'=>'请输入一个等于{number}的值'],
+        'ids'=>['class'=>'IdsValidator','defmsg'=>'请输入整型的值'],
         'filter'=>['class'=>'FilterValidator'],
     ];
 
@@ -346,12 +346,12 @@ class Validation
      *</pre>
      * @param string $validateType 验证类别名
      * @param string $validateClass 验证类
-     * @param string $message 消息模板
+     * @param string $defmsg 消息模板
      * @return $this
      */
-    public function addValidateType($validateType,$validateClass,$message = '')
+    public function addValidator(string $alias,$validator,$defmsg = ''):self
     {
-        self::$validators[$validateType] = ['class'=>$validateClass,'message'=>$message];
+        self::$validators[$alias] = ['class'=>$validator,'defmsg'=>$defmsg];
 
         return $this;
     }
@@ -556,28 +556,26 @@ class Validation
     {
         /** @var ValidateResult $result*/
         $message = '';
-        $defaultMessage = '';
-        $err_code = null;
-        $validResult = true;
+        $errResult = null;
         foreach ($resultList as $result) {
             if ($result->getResult() === false ) {
-                $validResult = false;
-                $message = $result->getMessage();
-                $defaultMessage = $result->getDefaultMessage();
-                $err_code = $result->getErrorCode();
+                $errResult = $result;
                 break;
             }
         }
 
-        if ($validResult === false) {
-            if (empty($message)) {
+        if ($errResult !== null) {
+            if (!empty($errResult->getMessage())) {
+                $message = $errResult->getMessage();
+            } else if (!empty($rule->getMessage())) {
                 $message = $rule->getMessage();
-                if (empty($message)) {
-                    $message = $defaultMessage;
-                }
+            } else {
+                $message = $errResult->getDefaultMessage();
             }
 
-            if (empty($err_code)) {
+            if (!empty($errResult->getErrorCode())) {
+                $err_code = $errResult->getErrorCode();
+            } else {
                 $err_code = $rule->getErrorCode();
             }
 
@@ -600,30 +598,29 @@ class Validation
     protected function resolveOrRuleResult($resultList,Rule $rule)
     {
         /** @var ValidateResult $result*/
-        $message = '';
         $validResult = false;
-        $defaultMessage = '';
-        $err_code = null;
+        $errResult = null;
         foreach ($resultList as $result) {
             if ($result->getResult() === true ) {
                 $validResult = true;
                 break;
             } else {
-                $defaultMessage = $result->getDefaultMessage();
-                $message = $result->getMessage();
-                $err_code = $result->getErrorCode();
+                $errResult = $result;
             }
         }
 
         if ($validResult === false) {
-            if (empty($message)) {
+            if (!empty($errResult->getMessage())) {
+                $message = $errResult->getMessage();
+            } else if (!empty($rule->getMessage())) {
                 $message = $rule->getMessage();
-                if (empty($message)) {
-                    $message = $defaultMessage;
-                }
+            } else {
+                $message = $errResult->getDefaultMessage();
             }
 
-            if (empty($err_code)) {
+            if (!empty($errResult->getErrorCode())) {
+                $err_code = $errResult->getErrorCode();
+            } else {
                 $err_code = $rule->getErrorCode();
             }
 
@@ -766,12 +763,12 @@ class Validation
     {
         if (isset(self::$validators[$validateType])) {
             $class = self::$validators[$validateType];
-            if (!isset($class['defaultMessage'])) {
-                if (isset($class['message'])) {
-                    $class['defaultMessage'] = $class['message'];
-                    unset($class['message']);
-                }
-            }
+//            if (!isset($class['defmsg'])) {
+//                if (isset($class['message'])) {
+//                    $class['defmsg'] = $class['message'];
+//                    unset($class['message']);
+//                }
+//            }
 
         } else {
             $class = $validateType;

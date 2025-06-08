@@ -58,7 +58,7 @@ class EmailValidator extends Validator
      * @param string $name 属性名
      * @return boolean
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         if (preg_match($this->pattern, $value)  || $this->allowName && preg_match($this->fullPattern, $value)) {
             return true;

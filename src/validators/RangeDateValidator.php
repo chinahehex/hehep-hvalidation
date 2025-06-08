@@ -32,7 +32,7 @@ class RangeDateValidator extends Validator
      * @param string $name 属性名
      * @return boolean
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         $validDatetime = strtotime($value);
         $result = true;
@@ -50,7 +50,7 @@ class RangeDateValidator extends Validator
             }
         }
 
-       
+
         if ($result) {
             return true;
         } else {

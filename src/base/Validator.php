@@ -70,7 +70,7 @@ class Validator
      *</pre>
      * @var string
      */
-    protected $err_code = null;
+    protected $errCode = null;
 
     /**
      * 当验证值为空时是否调用验证
@@ -115,14 +115,9 @@ class Validator
     protected $_params = [];
 
     /**
-     * 当前验证的对象活属性
-     *<B>说明：</B>
-     *<pre>
-     *  略
-     *</pre>
-     * @var object|array
+     * @var ValidForm
      */
-    protected $attributes = null;
+    public $validForm;
 
     /**
      * 构造方法
@@ -133,38 +128,32 @@ class Validator
      * @param array $config 类属性
      * @param Validation $validation 验证管理类
      */
-    public function __construct($config = [],Validation $validation = null)
+    public function __construct(array $config = [],Validation $validation = null)
     {
         // 属性赋值
-        $this->_init($config);
+        $this->setConfig($config);
 
         $this->validation = $validation;
     }
 
-    public function setAttributes(&$attributes)
+    /**
+     * 给对象属性赋值
+     *<B>说明：</B>
+     *<pre>
+     * 比较适合用于创建业务类
+     *</pre>
+     * @param array $config 属性
+     */
+    protected function setConfig(array $config  = []):void
     {
-        $this->attributes = $attributes;
+        foreach ($config as $key => $value) {
+            $this->$key = $value;
+        }
     }
 
-    protected function getAttribute($attrName)
+    public function setValidForm(ValidForm $validForm):void
     {
-        $attrNameList = explode(',',$attrName);
-        $attributeName = $attrNameList[0];
-        if (is_object($this->attributes)) {
-            $value = $this->attributes->$attributeName;
-        } else {
-            $value = $this->attributes[$attributeName];
-        }
-
-        foreach ($attrNameList as $attrName) {
-            if (isset($value[$attrName])) {
-                $value = $value[$attrName];
-            } else {
-                break;
-            }
-        }
-
-        return $value;
+        $this->validForm = $validForm;
     }
 
     /**
@@ -176,7 +165,7 @@ class Validator
      * @param string|array $value
      * @return boolean true 表示为空,否则为false
      */
-    public function isEmpty($value)
+    public function isEmpty($value):bool
     {
         if ($this->isEmpty !== null) {
             return call_user_func($this->isEmpty, $value);
@@ -195,29 +184,9 @@ class Validator
      * @param string $name 属性名
      * @return boolean
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         return true;
-    }
-
-    /**
-     * 验证对象方法
-     *<B>说明：</B>
-     *<pre>
-     *　略
-     *</pre>
-     * @param object $model 需验证对象
-     * @param array $attrs 属性名
-     * @return ValidateResult
-     */
-    public function validateAttrs($model,$attrs)
-    {
-        $values = [];
-        foreach ($attrs as $attr) {
-            $values[$attr] = $model->$attr;
-        }
-
-        return $this->validateValues($values);
     }
 
     /**
@@ -229,7 +198,7 @@ class Validator
      * @param array $values
      * @return ValidateResult
      */
-    public function validateValues($values = [])
+    public function validateValues($values = []):ValidateResult
     {
         $validateResultList = [];
 
@@ -239,7 +208,7 @@ class Validator
         }
 
         if (in_array(false,$validateResultList)) {
-            return new ValidateResult(false,$this->getMessage(),[],$this->err_code,$this->getDefaultMessage());
+            return new ValidateResult(false,$this->getMessage(),[],$this->errCode,$this->getDefaultMessage());
         } else {
             return new ValidateResult(true);
         }
@@ -254,7 +223,7 @@ class Validator
      * @param string $value
      * @return boolean
      */
-    public function isSkip($value)
+    public function isSkip($value):bool
     {
         // 验证是否空跳过
         if ($this->skipOnEmpty && $this->isEmpty($value)) {
@@ -274,7 +243,7 @@ class Validator
      * @param string $name 属性名
      * @return boolean
      */
-    public function validate($value,$name = null)
+    public function validate($value,$name = null):bool
     {
         if ($this->isSkip($value)) {
             return true;
@@ -288,23 +257,7 @@ class Validator
         return $result;
     }
 
-    /**
-     * 给对象属性赋值
-     *<B>说明：</B>
-     *<pre>
-     * 比较适合用于创建业务类
-     *</pre>
-     * @param array $attributes 属性
-     * @return $this
-     */
-    protected function _init($attributes)
-    {
-        foreach ($attributes as $attribute => $value) {
-            $this->$attribute = $value;
-        }
 
-        return $this;
-    }
 
     /**
      * 获取错误消息
@@ -314,7 +267,7 @@ class Validator
      *</pre>
      * @return string
      */
-    public function getMessage()
+    public function getMessage():string
     {
         if (empty($this->message)) {
             return '';
@@ -323,7 +276,7 @@ class Validator
         }
     }
 
-    public function getDefaultMessage()
+    public function getDefaultMessage():string
     {
         if (empty($this->defmsg)) {
             return '';
@@ -339,10 +292,10 @@ class Validator
      *  略
      *</pre>
      * @param string $message 验证方法名称
-     * @param array $params 验证规则
+     * @param array|string $params 验证规则
      * @return string
      */
-    public function formatMessage($message = '',$params = [])
+    public function formatMessage(string $message = '',$params = []):string
     {
 
         if (empty($params)) {
@@ -375,7 +328,7 @@ class Validator
      * @param string $charset 字符编码
      * @return int
      */
-    public function countLength($value,$charset = "utf-8")
+    public function countLength($value,$charset = "utf-8"):int
     {
         $re['utf-8']   = "/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}/";
         $re['gb2312'] = "/[\x01-\x7f]|[\xb0-\xf7][\xa0-\xfe]/";
@@ -395,7 +348,7 @@ class Validator
      * @param string $value 值
      * @return int
      */
-    public function addParam($key,$value)
+    public function addParam(string $key,$value):void
     {
         $this->_params[$key] = $value;
     }
@@ -408,19 +361,19 @@ class Validator
      *</pre>
      * @param array $params 参数(e.g ['key'=>'admin',...])
      */
-    public function addParams($params = [])
+    public function addParams(array $params = []):void
     {
         $this->_params = $this->_params + $params;
     }
 
-    public function getParams()
+    public function getParams():array
     {
         return $this->_params;
     }
 
     public function getErrorCode()
     {
-        return $this->err_code;
+        return $this->errCode;
     }
 
 }

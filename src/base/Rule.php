@@ -46,7 +46,7 @@ class Rule
      *</pre>
      * @var boolean
      */
-    protected $goon = true;
+    protected $goon = false;
 
     /**
      * 错误消息
@@ -66,7 +66,7 @@ class Rule
      *</pre>
      * @var string
      */
-    protected $err_code = null;
+    protected $errCode = null;
 
     /**
      * 场景
@@ -114,7 +114,7 @@ class Rule
 
         unset($ruleConfig[0],$ruleConfig[1]);
 
-        $this->attributes($ruleConfig);
+        $this->setConfig($ruleConfig);
     }
 
     /**
@@ -123,16 +123,15 @@ class Rule
      *<pre>
      * 比较适合用于创建业务类
      *</pre>
-     * @param array $attributes 属性
+     * @param array $config 属性
      * @return $this
      */
-    public function attributes($attributes)
+    protected function setConfig(array $config):void
     {
-        foreach ($attributes as $attribute => $value) {
-            $this->$attribute = $value;
+        foreach ($config as $key => $value) {
+            $this->$key = $value;
         }
 
-        return $this;
     }
 
     /**
@@ -183,7 +182,7 @@ class Rule
      */
     public function getErrorCode()
     {
-        return $this->err_code;
+        return $this->errCode;
     }
 
     /**
@@ -192,15 +191,14 @@ class Rule
      *<pre>
      *　略
      *</pre>
-     * @param array $attributes 格式 ['key'=>'name',...]
+     * @param ValidForm $validForm 格式 ['key'=>'name',...]
      * @return array
      */
-    public function getValues($attributes)
+    public function getValues(ValidForm $validForm)
     {
         $values = [];
-
         foreach ($this->attrs as $name) {
-            $values[$name] = isset($attributes[$name]) ? $attributes[$name] : null;
+            $values[$name] = $validForm->has($name) ? $validForm[$name] : null;
         }
 
         return $values;
@@ -213,17 +211,17 @@ class Rule
      *　根据场景过滤出适合符合传入场景的rule
      *</pre>
      * @param array $scenes 场景
-     * @param array|object $attributes 属性值
+     * @param ValidForm $validForm 属性值
      * @return boolean
      */
-    public function isActive($scenes = [],$attributes = [])
+    public function isActive($scenes = [],ValidForm $validForm)
     {
 
         if (!empty($this->on) && ($this->on != self::DEFUALT_SCENE && !in_array($this->on,$scenes))) {
             return false;
         }
 
-        if (!empty($this->when) && !call_user_func_array($this->when,[$this,$attributes])) {
+        if (!empty($this->when) && !call_user_func_array($this->when,[$this,$validForm])) {
             return false;
         }
 

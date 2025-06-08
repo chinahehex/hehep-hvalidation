@@ -48,7 +48,7 @@ class ValidateResult
      *</pre>
      * @var string
      */
-    protected $err_code = null;
+    protected $errCode = null;
 
     /**
      * 默认消息
@@ -70,12 +70,12 @@ class ValidateResult
      * @param string $message
      * @param array $params
      */
-    public function __construct($result,$message = '',$params = [],$err_code = null,$defaultMessage = '')
+    public function __construct($result,$message = '',$params = [],$errCode = null,$defaultMessage = '')
     {
         $this->result = $result;
         $this->message = $message;
         $this->params = $params;
-        $this->err_code = $err_code;
+        $this->errCode = $errCode;
         $this->defaultMessage  = $defaultMessage;
     }
 
@@ -86,7 +86,7 @@ class ValidateResult
      * 略
      *</pre>
      */
-    public function getMessage()
+    public function getMessage():string
     {
         return $this->message;
     }
@@ -98,7 +98,7 @@ class ValidateResult
      * 略
      *</pre>
      */
-    public function getParams()
+    public function getParams():array
     {
         return $this->params;
     }
@@ -111,7 +111,7 @@ class ValidateResult
      *</pre>
      * @param boolean $result 验证结果
      */
-    public function setResult($result)
+    public function setResult($result):void
     {
         $this->result = $result;
     }
@@ -123,7 +123,7 @@ class ValidateResult
      * 略
      *</pre>
      */
-    public function getResult()
+    public function getResult():bool
     {
         return $this->result;
     }
@@ -134,13 +134,14 @@ class ValidateResult
      *<pre>
      * 略
      *</pre>
+     * @return int|string
      */
     public function getErrorCode()
     {
-        return $this->err_code;
+        return $this->errCode;
     }
 
-    public function getDefaultMessage()
+    public function getDefaultMessage():string
     {
         return $this->defaultMessage;
     }

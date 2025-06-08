@@ -38,7 +38,7 @@ class MobileValidator extends Validator
      * @param string $name 属性名
      * @return boolean
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         $valid = preg_match($this->pattern, $value);
 

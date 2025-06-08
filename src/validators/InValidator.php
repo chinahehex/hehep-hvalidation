@@ -29,7 +29,7 @@ class InValidator extends Validator
      */
     protected $numbers = [];
 
-    public function __construct($config = [],Validation $validation = null)
+    public function __construct(array $config = [],Validation $validation = null)
     {
         parent::__construct($config, $validation);
 
@@ -48,7 +48,7 @@ class InValidator extends Validator
      * @param string $name 属性名
      * @return boolean
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         $result = true;
         $val_list = explode(',',$value);

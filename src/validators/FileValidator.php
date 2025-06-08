@@ -42,7 +42,7 @@ class FileValidator extends Validator
      * @param string $name 属性名
      * @return boolean
      */
-    protected function validateValue($file,$name = null)
+    protected function validateValue($file,$name = null):bool
     {
         // 判断是否文件类型
         if (!empty($file) && is_array($file) && isset($file['tmp_name'])) {

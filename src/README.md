@@ -1,18 +1,18 @@
 # hehep-hvalidation
 
 ## 介绍
-- hehep-hvalidation 是一个PHP 验证器工具组件
-- 支持多个验证器
-- 支持验证多个属性
-- 支持验证多维数组
-- 直接使用验证器验证
-- 支持与或 or,and,&,| 运算
-- 支持单独设置验证规则错误消息
-- 支持验证规则使用场景
-- 支持设置验证规则的前置条件
-- 支持添加自定义验证器
-- 支持验证器直接为方法或函数
-- 支持自定义错误码
+> hehep-hvalidation 是一个PHP 验证器工具组件  
+> 支持多个验证器  
+> 支持验证多个属性  
+> 支持验证多维数组  
+> 直接使用验证器验证  
+> 支持与或 or,and,&,| 运算  
+> 支持单独设置验证规则错误消息  
+> 支持验证规则使用场景  
+> 支持设置验证规则的前置条件  
+> 支持添加自定义验证器  
+> 支持验证器直接为方法或函数  
+> 支持自定义错误码  
 
 ## 安装
 - **gitee下载**:
@@ -31,29 +31,37 @@ composer require hehex/hehep-hvalidation
 ```
 
 ## 组件配置
-```
-验证规则:
-['验证名称',[['验证器1','验证器1属性1'=>'','验证器1属性2'=>''],['验证器2','验证器2属性1'=>'','验证器2属性2'=>''] ],'验证规则属性1'=>'','验证规则属性2'=>''],
-```
 
+> 规则格式:  
+>  ['验证名称',[['验证器1','验证器1属性1'=>'','验证器1属性2'=>''],['验证器2','验证器2属性1'=>'','验证器2属性2'=>''] ],'验证规则属性1'=>'','验证规则属性2'=>'']
+
+>  ['name',[ ['required','message'=>'必填!'],['inlist','numbers'=>[1,2,3,4]] ],'message'=>'你输入的格式错误!','skipOnEmpty'=>true]
+
+
+- 验证规则(Rule)参数
 ```php
-
-// 验证器参数
-$validatorConf= [
-    "message"=>"你输入的格式错误!",// 错误消息,
-    "err_code"=>null,// 错误码,非必填
-    "skipOnEmpty"=>true,// 当验证值为空时是否调用验证,true 表示值为空时不验证,false 表示值为空时继续验证
-];
-
 // 验证规则参数
-$ruleConf = [
-    "goon"=>false,// 当验证失败后,是否继续其他验证
+$ruleConfig = [
+    "goon"=>false,// 当验证错误是是否继续验证
     "message"=>"你输入的格式错误!",// 错误消息
-    "err_code"=>null,// 错误码,非必填
+    "errCode"=>null,// 错误码,非必填
     "on"=>"create",// 使用场景
     "when"=>'valint(方法或函数)',// 满足条件,规则才有效
 ];
+
 ```
+
+- 验证器参数
+```php
+// 验证器参数
+$validatorConfig= [
+    "message"=>"你输入的格式错误!",// 错误消息
+    "errCode"=>null,// 错误码,非必填
+    "skipOnEmpty"=>true,// 当验证值为空时是否调用验证,true 表示　值为空时,不验证,false 表示值为空，继续验证
+];
+
+```
+
 ## 基本示例
 
 - 快速使用
@@ -72,13 +80,13 @@ $data = [
 // 校验规则
 $rules = [
     ['name',[['required']],'message'=>'很多的'],
-    ['age',[['required'],['number','message'=>'年龄必须为数字','err_code'=>-1]],'message'=>'请输入的年龄格式错误!','err_code'=>-2],
+    ['age',[['required'],['number','message'=>'年龄必须为数字','errCode'=>-1]],'message'=>'请输入的年龄格式错误!','errCode'=>-2],
     ['userType',[['required'],['inlist','numbers'=>[1,2,3,4]]],'message'=>'用户类型的值必须为1,2,3,4!'],
     ['tel',['or',['phone'],['mobile']],'message'=>'请输入手机号或固定电话'],
     
 ];
 
-$validationResult = $hvalidation->validate($rules,$data);
+$validationResult = $hvalidation->doValidate($rules,$data);
 if (!$validationResult->getResult()) {
     var_dump("校验失败");
     // 获取首个验证器错误消息
@@ -101,11 +109,11 @@ Validation::ip('135xxxxxxx');
 $rules = [
     ['attr1',[['required'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串'],
     ['attr1',['or',['boolean'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串或布尔型'],
-]
+];
 
 $rules = [
     ['attr1',['&' [['验证器1']],['or',[['验证器2']],[['验证器3']]] ],'message'=>'多验证器,或'],
-]
+];
 
 ```
 
@@ -113,26 +121,21 @@ $rules = [
 ```php
 $rules = [
     ['attr1,attr2',[['!empty']],'message'=>'参数不能为空'],
-]
-```
-
-- 验证多维数组
-```php
-//@todo
+];
 ```
 
 - 设置验证规则错误消息
 ```php
 $rules = [
     ['attr1',[['required'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串']
-]
+];
 ```
 
 - 设置验证器错误消息
 ```php
 $rules = [
     ['attr1',[['required'],['minlen','min'=>10,'max'=>20,'message'=>'请输入一个10-20位的字符串']],'message'=>'不能为空']
-]
+];
 ```
 
 - 设置验证规则使用场景
@@ -140,7 +143,7 @@ $rules = [
 // on=add 用于添加规则
 $rules = [
     ['attr1',[['required'],['minlen','min'=>10,'max'=>20]],'message'=>'请输入一个10-20位的字符串','on'=>'add']
-]
+];
 ```
 
 - 设置验证规则的前置条件
@@ -167,7 +170,7 @@ $rules = [
 ```php
 use hehe\core\hvalidation\Validation;
 $hvalidation = new Validation();
-$validation->addValidator('自定义验证器别名','hehe\\core\\validate\\BooleanValidate','自定义消息内容');
+$hvalidation->addValidator('自定义验证器别名',BooleanValidate::class,'自定义消息内容');
 ```
 
 - 验证器直接为方法或函数
@@ -179,12 +182,13 @@ $rules = [
 
 - 验证器直接为闭包
 ```php
+use hehe\core\hvalidation\validators\CallValidator;
 $rules = [
-     ['attr1',[ [function($val,CallValidator $validator){
+     ['name',[ [function($val,CallValidator $validator){
         // 验证结果 true or false
         
-        // 定义的其他参数
-        $validator->params;
+        // 获取所有表单数据
+        $userId = $validator->validForm['userId'];
         
      } ] ],'message'=>'请输入一个10-20位的字符串']
 ];
@@ -227,7 +231,6 @@ class IndexController
      * @EgtValid(number=10)
      */
      public $age;
-
 }
 
 ```
@@ -286,7 +289,7 @@ class TelValidator extends Validator
     public static function install()
     {
         return [
-            'tel'=>['class'=>static::class,'其他规则'=>'xxxx'],
+            'tel'=>['class'=>static::class,'defmsg'=>'手机格式错误！','验证器其他参数'=>'xxxx'],
         ];
     }
     
@@ -317,6 +320,15 @@ Validation::install('common\extend\validators\CommonValidators');
 ```
 
 ## 安装验证器
+
+- **注册验证器**
+```php
+use hehe\core\hvalidation\Validation;
+$hvalidation = new Validation();
+$hvalidation->addValidator('自定义验证器别名',BooleanValidate::class,'自定义消息内容');
+```
+  
+
 - **指定验证器安装**
 ```php
 Validation::install('common\extend\validators\CommonValidators');
@@ -433,7 +445,7 @@ $rules = $hvalidation->getMethodRule(UserController::class,'add');
 $rules = Validation::getRule(UserController::class . '@add');
 
 
-$validationResult = $hvalidation->validate($rules,$data);
+$validationResult = $hvalidation->doValidate($rules,$data);
 
 ```
 

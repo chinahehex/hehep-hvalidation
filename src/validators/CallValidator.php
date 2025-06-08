@@ -34,7 +34,7 @@ class CallValidator extends Validator
      */
     public $params = [];
 
-    public function __construct($config = [],Validation $validation = null)
+    public function __construct(array $config = [],Validation $validation = null)
     {
         parent::__construct($config,$validation);
 
@@ -75,10 +75,10 @@ class CallValidator extends Validator
      * @param string $name 属性名
      * @return boolean
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         $result = call_user_func_array($this->func,[$value,$this]);
-        
+
         return $result;
     }
 

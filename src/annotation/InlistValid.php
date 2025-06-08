@@ -9,7 +9,8 @@ use Attribute;
 #[Attribute]
 class InlistValid extends Validator
 {
-
-    public $validator = 'inlist';
+    public $numbers = [];
     
+    public $validator = 'inlist';
+
 }

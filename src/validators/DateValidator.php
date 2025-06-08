@@ -38,7 +38,7 @@ class DateValidator extends Validator
      * @param string $name 属性名
      * @return boolean
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         $this->addParam('format',$this->format);
         $date = DateTime::createFromFormat($this->format, $value);

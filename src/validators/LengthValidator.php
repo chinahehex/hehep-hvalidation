@@ -60,7 +60,7 @@ class LengthValidator extends Validator
      * @return boolean
      * @throws Exception
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
 
         $len = $this->countLength($value);

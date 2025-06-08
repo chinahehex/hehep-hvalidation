@@ -44,7 +44,7 @@ class EqualValidator extends Validator
      * @return boolean
      * @throws Exception
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         if (!in_array($this->operator,['==','==='])) {
             throw  new Exception('validate type equal operator invalid');

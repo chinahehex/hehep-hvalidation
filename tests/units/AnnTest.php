@@ -4,6 +4,7 @@ use hehe\core\hcontainer\ContainerManager;
 use hehe\core\hvalidation\annotation\AnnValidatorProcessor;
 use hehe\core\hvalidation\Validation;
 
+use hehe\Hehe;
 use hvalidation\tests\common\User;
 use hvalidation\tests\TestCase;
 
@@ -21,7 +22,7 @@ class AnnTest extends TestCase
 
 
 
-    protected function setUp()
+    protected function setUp():void
     {
         parent::setUp();
         $this->hcontainer = new ContainerManager();
@@ -43,8 +44,7 @@ class AnnTest extends TestCase
         // 校验规则
         $rules = Validation::getRule(User::class);
 
-        $validationResult = $this->hvalidation->validate($rules,$data);
-
+        $validationResult = $this->hvalidation->doValidate($rules,$data);
         $this->assertTrue($validationResult->getResult());
     }
 
@@ -63,7 +63,7 @@ class AnnTest extends TestCase
         // 校验规则
         $rules = Validation::getRule(User::class.'@add');
 
-        $validationResult = $this->hvalidation->validate($rules,$data);
+        $validationResult = $this->hvalidation->doValidate($rules,$data);
 
         $this->assertTrue($validationResult->getResult());
     }
@@ -80,7 +80,7 @@ class AnnTest extends TestCase
 
         // 校验规则
         $rules = Validation::getRule(User::class.'@add1');
-        $validationResult = $this->hvalidation->validate($rules,$data);
+        $validationResult = $this->hvalidation->doValidate($rules,$data);
 
         $this->assertTrue($validationResult->getResult());
     }

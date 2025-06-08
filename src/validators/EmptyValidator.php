@@ -24,7 +24,7 @@ class EmptyValidator extends Validator
      * @param string $name 属性名
      * @return boolean
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         if (empty($value)) {
             return true;

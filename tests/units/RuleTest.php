@@ -25,7 +25,7 @@ class RuleTest extends TestCase
             ['tel',['or',['phone'],['mobile']],'message'=>'请输入手机号或固定电话'],
         ];
 
-        $validationResult = $this->hvalidation->validate($rules,$data);
+        $validationResult = $this->hvalidation->doValidate($rules,$data);
 
         $this->assertTrue($validationResult->getResult());
     }
@@ -34,27 +34,27 @@ class RuleTest extends TestCase
     public function testMoreValid()
     {
 
-        $this->assertTrue($this->hvalidation->validate(
+        $this->assertTrue($this->hvalidation->doValidate(
             [['userType',['and',['int'],['inlist','numbers'=>[1,2,3,4]]],'message'=>'用户类型的值必须为{numbers}!'],],
             ['userType'=>1,])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate(
+        $this->assertTrue($this->hvalidation->doValidate(
             [['userType',['&',['int'],['inlist','numbers'=>[1,2,3,4]]],'message'=>'用户类型的值必须为{numbers}!'],],
             ['userType'=>1,])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate(
+        $this->assertTrue($this->hvalidation->doValidate(
             [['userType',['or',['int'],['en']],'message'=>'请输入整型或英文'],],
             ['userType'=>1,])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate(
+        $this->assertTrue($this->hvalidation->doValidate(
             [['userType',['|',['int'],['en']],'message'=>'请输入整型或英文'],],
             ['userType'=>1,])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate(
+        $this->assertTrue($this->hvalidation->doValidate(
             [['userType',['or',['int'],['en']],'message'=>'请输入整型或英文'],],
             ['userType'=>"hehe",])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate(
+        $this->assertFalse($this->hvalidation->doValidate(
             [['userType',['or',['int'],['en']],'message'=>'请输入整型或英文'],],
             ['userType'=>"爱我中国",])->getResult());
 
@@ -64,11 +64,11 @@ class RuleTest extends TestCase
     public function testValidRuleMessage()
     {
 
-        $this->assertEquals('手机号号码格式错误',$this->hvalidation->validate(
+        $this->assertEquals('手机号号码格式错误',$this->hvalidation->doValidate(
             [['tel',[['mobile','message'=>'手机号号码格式错误']],'message'=>'请输入错误提示消息'],],
             ['tel'=>"13511111111a",])->getFirstMessage());
 
-        $this->assertEquals('请输入错误提示消息',$this->hvalidation->validate(
+        $this->assertEquals('请输入错误提示消息',$this->hvalidation->doValidate(
             [['tel',[['mobile']],'message'=>'请输入错误提示消息'],],
             ['tel'=>"13511111111a",])->getFirstMessage());
     }
@@ -77,12 +77,12 @@ class RuleTest extends TestCase
     public function testValidRuleErrCode()
     {
 
-        $this->assertEquals('1001',$this->hvalidation->validate(
-            [['tel',[['mobile','message'=>'手机号号码格式错误','err_code'=>1001]],'message'=>'请输入错误提示消息'],],
+        $this->assertEquals('1001',$this->hvalidation->doValidate(
+            [['tel',[['mobile','message'=>'手机号号码格式错误','errCode'=>1001]],'message'=>'请输入错误提示消息'],],
             ['tel'=>"13511111111a",])->getFirstCode());
 
-        $this->assertEquals('1002',$this->hvalidation->validate(
-            [['tel',[['mobile']],'message'=>'请输入错误提示消息','err_code'=>1002],],
+        $this->assertEquals('1002',$this->hvalidation->doValidate(
+            [['tel',[['mobile']],'message'=>'请输入错误提示消息','errCode'=>1002],],
             ['tel'=>"13511111111a",])->getFirstCode());
     }
 
@@ -95,23 +95,23 @@ class RuleTest extends TestCase
             ['age',[['int']],'message'=>'年龄格式错误'],
         ];
 
-//        $this->assertTrue($this->hvalidation->validate($rules,[
+//        $this->assertTrue($this->hvalidation->doValidate($rules,[
 //            'realName'=>'hehe',
 //            'age'=>1
 //        ],['add'])->getResult());
 //
-//        $this->assertTrue($this->hvalidation->validate($rules,[
+//        $this->assertTrue($this->hvalidation->doValidate($rules,[
 //            'id'=>1,
 //            'realName'=>'hehe',
 //            'age'=>1
 //        ],['edit'])->getResult());
 //
-//        var_dump($this->hvalidation->validate($rules,[
+//        var_dump($this->hvalidation->doValidate($rules,[
 //            'realName'=>'hehe',
 //            'age'=>1
 //        ],['edit'])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate($rules,[
+        $this->assertFalse($this->hvalidation->doValidate($rules,[
             'realName'=>'hehe',
             'age'=>1
         ],['edit'])->getResult());
@@ -124,12 +124,12 @@ class RuleTest extends TestCase
             ['id,age',[['required'],['ids']],'message'=>'请输入合法的id'],
         ];
 
-        $this->assertTrue($this->hvalidation->validate($rules,[
+        $this->assertTrue($this->hvalidation->doValidate($rules,[
             'id'=>'1',
             'age'=>1
         ])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate($rules,[
+        $this->assertFalse($this->hvalidation->doValidate($rules,[
             'id'=>'1a',
             'age'=>1
         ])->getResult());
@@ -143,17 +143,17 @@ class RuleTest extends TestCase
             ['age',[['int']],'message'=>'年龄格式错误'],
         ];
 
-        $this->assertTrue($this->hvalidation->validate($rules,[
+        $this->assertTrue($this->hvalidation->doValidate($rules,[
             'id'=>'1',
             'age'=>4
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate($rules,[
+        $this->assertTrue($this->hvalidation->doValidate($rules,[
             'id'=>'1a',
             'age'=>1
         ])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate($rules,[
+        $this->assertFalse($this->hvalidation->doValidate($rules,[
             'id'=>'1a',
             'age'=>4
         ])->getResult());
@@ -176,7 +176,6 @@ class RuleTest extends TestCase
         // 创建一个数值范围验证器
         $validate = $this->hvalidation->createValidator('range',['min'=>10,'max'=>20]);
 
-        $this->assertTrue($validate->validate(11));
         $this->assertTrue($validate->validate(10));
         $this->assertFalse($validate->validate(9));
         $this->assertTrue($validate->validate(20));
@@ -199,7 +198,7 @@ class RuleTest extends TestCase
             ['age',[[$age_func]],'message'=>'年龄格式错误'],
         ];
 
-        $this->assertTrue($this->hvalidation->validate($rules,[
+        $this->assertTrue($this->hvalidation->doValidate($rules,[
             'id'=>'1',
             'age'=>1
         ])->getResult());
@@ -209,133 +208,133 @@ class RuleTest extends TestCase
     public function testValidField()
     {
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['confirmpwd',[['required'],['eqstrfield','field'=>'pwd']],'message'=>'确认密码必须与密码一致'],
         ],[
             'pwd'=>"123456",// 密码
             'confirmpwd'=>"123456",// 确认密码
         ])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate([
+        $this->assertFalse($this->hvalidation->doValidate([
             ['confirmpwd',[['required'],['eqstrfield','field'=>'pwd']],'message'=>'确认密码必须与密码一致'],
         ],[
             'pwd'=>"123456",// 密码
             'confirmpwd'=>"1234567",// 确认密码
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['field2',[['required'],['eqintfield','field'=>'field1']],'message'=>'确认密码必须与密码一致'],
         ],[
             'field1'=>"100",
             'field2'=>"100",
         ])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate([
+        $this->assertFalse($this->hvalidation->doValidate([
             ['field2',[['required'],['eqintfield','field'=>'field1']],'message'=>'验证字段与指定字段数值必须相等'],
         ],[
             'field1'=>"100",
             'field2'=>"101",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['field1',[['required'],['gtintfield','field'=>'field2']],'message'=>'验证字段与指定字段数值是否大于'],
         ],[
             'field1'=>"102",
             'field2'=>"101",
         ])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate([
+        $this->assertFalse($this->hvalidation->doValidate([
             ['field1',[['required'],['gtintfield','field'=>'field2']],'message'=>'验证字段与指定字段数值是否大于'],
         ],[
             'field1'=>"101",
             'field2'=>"102",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['field1',[['required'],['egtintfield','field'=>'field2']],'message'=>'验证字段与指定字段数值是否大于'],
         ],[
             'field1'=>"102",
             'field2'=>"101",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['field1',[['required'],['egtintfield','field'=>'field2']],'message'=>'验证字段与指定字段数值是否大于'],
         ],[
             'field1'=>"101",
             'field2'=>"101",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['field1',[['required'],['ltintfield','field'=>'field2']],'message'=>'验证字段与指定字段数值是否大于'],
         ],[
             'field1'=>"100",
             'field2'=>"101",
         ])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate([
+        $this->assertFalse($this->hvalidation->doValidate([
             ['field1',[['required'],['ltintfield','field'=>'field2']],'message'=>'验证字段与指定字段数值是否大于'],
         ],[
             'field1'=>"102",
             'field2'=>"101",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['field1',[['required'],['eltintfield','field'=>'field2']],'message'=>'验证字段与指定字段数值是否大于'],
         ],[
             'field1'=>"100",
             'field2'=>"101",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['date1',[['required'],['gtdatefield','field'=>'date2']],'message'=>'验证日期字段与指定日期字段数值是否大于'],
         ],[
             'date1'=>"2021-11-21",
             'date2'=>"2021-11-20",
         ])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate([
+        $this->assertFalse($this->hvalidation->doValidate([
             ['date1',[['required'],['gtdatefield','field'=>'date2']],'message'=>'验证日期字段与指定日期字段数值是否大于'],
         ],[
             'date1'=>"2021-11-21",
             'date2'=>"2021-11-21",
         ])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate([
+        $this->assertFalse($this->hvalidation->doValidate([
             ['date1',[['required'],['gtdatefield','field'=>'date2']],'message'=>'验证日期字段与指定日期字段数值是否大于'],
         ],[
             'date1'=>"2021-11-19",
             'date2'=>"2021-11-20",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['date1',[['required'],['egtdatefield','field'=>'date2']],'message'=>'验证日期字段与指定日期字段数值是否大于'],
         ],[
             'date1'=>"2021-11-21",
             'date2'=>"2021-11-21",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['date1',[['required'],['ltdatefield','field'=>'date2']],'message'=>'验证日期字段与指定日期字段数值是否大于'],
         ],[
             'date1'=>"2021-11-20",
             'date2'=>"2021-11-21",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['date1',[['required'],['eltdatefield','field'=>'date2']],'message'=>'验证日期字段与指定日期字段数值是否大于'],
         ],[
             'date1'=>"2021-11-20",
             'date2'=>"2021-11-20",
         ])->getResult());
 
-        $this->assertTrue($this->hvalidation->validate([
+        $this->assertTrue($this->hvalidation->doValidate([
             ['date1',[['required'],['eltdatefield','field'=>'date2']],'message'=>'验证日期字段与指定日期字段数值是否大于'],
         ],[
             'date1'=>"2021-11-20",
             'date2'=>"2021-11-21",
         ])->getResult());
 
-        $this->assertFalse($this->hvalidation->validate([
+        $this->assertFalse($this->hvalidation->doValidate([
             ['date1',[['required'],['eltdatefield','field'=>'date2']],'message'=>'验证日期字段与指定日期字段数值是否大于'],
         ],[
             'date1'=>"2021-11-21",

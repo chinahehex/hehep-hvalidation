@@ -30,7 +30,7 @@ class User
     public $userType;
 
     /**
-     * @MobileValid("手机号码",numbers="1,2,3,4")
+     * @MobileValid("手机号码")
      * @var string
      */
     public $tel;

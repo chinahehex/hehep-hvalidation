@@ -11,7 +11,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected $hvalidation;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->hvalidation = new Validation();
     }

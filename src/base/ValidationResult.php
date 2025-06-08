@@ -14,7 +14,7 @@ class ValidationResult
     /**
      * @var ValidateResult[]
      */
-    protected $validatorResults = [];
+    protected $validateResults = [];
 
     /**
      * 错误消息
@@ -47,7 +47,7 @@ class ValidationResult
 
         $validResult = true;
 
-        foreach ($this->validatorResults as $validatorResult) {
+        foreach ($this->validateResults as $validatorResult) {
             if ($validatorResult->getResult() == false) {
                 $validResult = false;
                 if (is_null($this->firstValidResult)) {
@@ -67,7 +67,7 @@ class ValidationResult
      * 获取首个验证器错误消息
      * @return string
      */
-    public function getFirstMessage()
+    public function getFirstMessage():string
     {
         return $this->firstValidResult->getMessage();
     }
@@ -77,17 +77,26 @@ class ValidationResult
         return $this->firstValidResult->getErrorCode();
     }
 
-    public function getErrors()
+    public function getErrCode()
+    {
+        return $this->firstValidResult->getErrorCode();
+    }
+
+    public function getErrMsg():string
+    {
+        return $this->firstValidResult->getMessage();
+    }
+
+    public function getErrors():array
     {
         return $this->errors;
     }
 
-    public function addValidatorResult($validatorResult)
+    public function addValidatorResult(ValidateResult $validateResult):void
     {
-
-        $this->validatorResults[] = $validatorResult;
-        if (is_null($this->firstValidResult) && $validatorResult->getResult() === false) {
-            $this->firstValidResult = $validatorResult;
+        $this->validateResults[] = $validateResult;
+        if (is_null($this->firstValidResult) && $validateResult->getResult() === false) {
+            $this->firstValidResult = $validateResult;
         }
     }
 

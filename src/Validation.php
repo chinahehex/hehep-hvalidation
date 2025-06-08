@@ -5,6 +5,7 @@ use hehe\core\hvalidation\base\Rule;
 use hehe\core\hvalidation\base\ValidateResult;
 use hehe\core\hvalidation\base\ValidationResult;
 use hehe\core\hvalidation\base\Validator;
+use hehe\core\hvalidation\base\ValidForm;
 
 /**
  * 验证对象属性类
@@ -218,7 +219,6 @@ class Validation
         'vlist'=>['class'=>'VlistValidator','defmsg'=>'请输入合法格式字符'],
         'eq'=>['class'=>'EqualValidator','defmsg'=>'请输入一个等于{number}的值'],
         'ids'=>['class'=>'IdsValidator','defmsg'=>'请输入整型的值'],
-        'filter'=>['class'=>'FilterValidator'],
     ];
 
 
@@ -230,70 +230,32 @@ class Validation
      *</pre>
      * @param array $config 属性
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
-        $this->_init($config);
-    }
-
-    /**
-     * 创建当前类实例
-     *<B>说明：</B>
-     *<pre>
-     * 略
-     *</pre>
-     * @param array $config 参数
-     * @return $this
-     */
-    public static function make($config)
-    {
-        return new static($config);
-    }
-
-    /**
-     * 给对象属性赋值
-     *<B>说明：</B>
-     *<pre>
-     * 略
-     *</pre>
-     * @param array $attributes 属性列表
-     * @return $this
-     */
-    protected function _init($attributes)
-    {
-        foreach ($attributes as $attribute => $value) {
-            $this->$attribute = $value;
+        if (!empty($config)) {
+            foreach ($config as $key => $value) {
+                $this->$key = $value;
+            }
         }
 
+        $this->installCustomValidators();
+    }
+
+    /**
+     * 注册自定义验证器
+     *<B>说明：</B>
+     *<pre>
+     * 略
+     *</pre>
+     * @param array $config 属性列表
+     * @return $this
+     */
+    protected function installCustomValidators():void
+    {
         // 加载自定义格式化列表
         foreach ($this->customValidators as $validator_class) {
             /** @var Validator  $validator_class **/
             static::install($validator_class);
-        }
-
-        return $this;
-    }
-
-    protected static function buildCustomValidator($custom_validator)
-    {
-        $new_class_status = true;
-        if (strpos($custom_validator,"@@") !== false) {
-            list($custom_validator_class,$custom_validator_method) = explode("@@",$custom_validator);
-            $new_class_status = false;
-        } else if (strpos($custom_validator,"@") !== false) {
-            list($custom_validator_class,$custom_validator_method) = explode("@",$custom_validator);
-
-        } else {
-            $custom_validator_class = $custom_validator;
-        }
-
-        if (empty($custom_validator_method)) {
-            $custom_validator_method = 'install';
-        }
-
-        if ($new_class_status) {
-            return [new $custom_validator_class(),$custom_validator_method];
-        } else {
-            return [$custom_validator_class,$custom_validator_method];
         }
     }
 
@@ -303,18 +265,18 @@ class Validation
      *<pre>
      * 略
      *</pre>
-     * @param string $class 目标类路径
+     * @param string $name 目标类路径
      * @param array $rule 验证规则
      * @return $this
      */
-    public static function addRule(string $keyword,array $rule):void
+    public static function addRule(string $name,array $rule):void
     {
-        static::$rules[$keyword][] = $rule;
+        static::$rules[$name][] = $rule;
     }
 
-    public static function getRule(string $keyword):array
+    public static function getRule(string $name):?array
     {
-        return isset(static::$rules[$keyword]) ? static::$rules[$keyword] : [];
+        return isset(static::$rules[$name]) ? static::$rules[$name] : [];
     }
 
     /**
@@ -322,7 +284,7 @@ class Validation
      * @param string $class
      * @return array
      */
-    public function getClassRule(string $class)
+    public function getClassRule(string $class):?array
     {
         return static::getRule($class);
     }
@@ -333,7 +295,7 @@ class Validation
      * @param string $method
      * @return array
      */
-    public function getMethodRule(string $class,string $method)
+    public function getMethodRule(string $class,string $method):?array
     {
         return static::getRule($class . "@" . $method);
     }
@@ -365,20 +327,21 @@ class Validation
      *</pre>
      * @param array $rules 验证规则
      * @param array $scene 场景
+     * @param ValidForm $validForm 验证的数据
      * @return Rule[]
      * @throws Exception
      */
-    protected function getValidRules($rules,$scene = [],$attributes = [])
+    protected function getValidRules(?array $rules,$scene = [],ValidForm $validForm):array
     {
         $ruleList = [];
         foreach ($rules as $rule) {
             if (is_array($rule) && isset($rule[0], $rule[1])) {
                 $rule = new Rule($rule);
-                if ($rule->isActive($scene,$attributes)) {
+                if ($rule->isActive($scene,$validForm)) {
                     $ruleList[] = $rule;
                 }
             } else {
-                throw new Exception('Invalid validation rule: a rule must specify both attribute names and validator type.');
+                throw new Exception('Invalid validation rule');
             }
         }
 
@@ -392,28 +355,30 @@ class Validation
      *　略
      *</pre>
      * @param array $rules 验证规则
-     * @param array $attributes 格式 ['key'=>'name',...]
+     * @param array $datas 格式 ['key'=>'name',...]
      * @param array $scenes 验证场景['场景1','场景2',...]
      * @return ValidationResult
      * @throws Exception
      */
-    public function validate($rules,$attributes,$scenes = [])
+    public function doValidate(?array $rules,$datas,$scenes = []):ValidationResult
     {
-
         // 获取注解验证规则
-        if (empty($rules) && is_object($attributes)) {
-            $rules = static::getRule(get_class($attributes));
+        if (empty($rules) && is_object($datas)) {
+            $rules = static::getRule(get_class($datas));
         }
 
+        $validForm = new ValidForm($datas);
+
         // 获取有效的验证规则
-        $rules = $this->getValidRules($rules,$scenes,$attributes);
-        // 整体验证结果列表
+        $rules = $this->getValidRules($rules,$scenes,$validForm);
+
+        // 验证结果列表
         $validationResult = new ValidationResult();
 
         foreach ($rules as $rule) {
             $validatorTypes = $rule->getValidateTypes();
             /** @var ValidateResult $result */
-            $validateResult = $this->validateRule($rule,$attributes,$validatorTypes);
+            $validateResult = $this->validateRule($rule,$validForm,$validatorTypes);
             $validationResult->addValidatorResult($validateResult);
             // 验证通不过，而且不在继续下一次的验证
             if ($validateResult->getResult() === false && !$rule->getGoonStatus()) {
@@ -425,22 +390,21 @@ class Validation
     }
 
     /**
-     * 单个规则验证
+     * 验证单个规则
      *<B>说明：</B>
      *<pre>
      *　略
      *</pre>
      * @param Rule $rule 验证规则对象
-     * @param array $attributes 格式 ['key'=>'name',...]
+     * @param ValidForm $validForm 格式 ['key'=>'name',...]
      * @param array $validateTypes 格式 []
      * @return ValidateResult
-     * @throws Exception
      */
-    protected function validateRule(Rule $rule,$attributes,$validateTypes = [])
+    protected function validateRule(Rule $rule,ValidForm $validForm,$validateTypes = []):ValidateResult
     {
+        // $validateTypes:['&',['验证器类型1','属性1'], ['验证器类型2','属性2']]
         // 获取属性值
         $operator = '&';
-
         if (is_string($validateTypes[0])) {
             $operator = $validateTypes[0];
             array_shift($validateTypes);
@@ -450,40 +414,35 @@ class Validation
         /** @var ValidateResult $result */
         // 批量验证类
         foreach ($validateTypes as $validateType) {
-
             if ($this->isResolveValidType($validateType)) {
                 // 递归验证方法
-                $result = $this->validateRule($rule,$attributes,$validateType);
+                $result = $this->validateRule($rule,$validForm,$validateType);
             } else {
                 $validType = $validateType[0];
-                $validateConfig = array_slice($validateType, 1);
-
+                $validatorConfig = array_slice($validateType, 1);
                 // 获取其他属性，为验证类使用
-                if (isset($validateConfig['attrs'])) {
-                    $attrs = $validateConfig['attrs'];
-                    unset($validateConfig['attrs']);
-                    $attrsValues = $this->getValues($attrs,$attributes);
-                    $validateConfig = array_merge($validateConfig,$attrsValues);
+                if (isset($validatorConfig['attrs'])) {
+                    $validatorConfig = array_merge($validatorConfig,$this->getValueFromVaildForm($validatorConfig['attrs'],$validForm));
+                    unset($validatorConfig['attrs']);
                 }
 
+                // 判断是否非操作
                 if (is_string($validType)) {
-                    // 读取第一个字符
-                    $nonsymbol = substr($validType,0, 1 );
-                    if ($nonsymbol === '!') {
+                    if (substr($validType,0, 1) === '!') {
                         $validType = substr($validType,1);
-                        $validateConfig['non'] = true;
+                        $validatorConfig['non'] = true;
                     }
                 } else if (is_array($validType) || $validType instanceof \Closure) {
-                    $validateConfig['func'] = $validType;
+                    $validatorConfig['func'] = $validType;
                     $validType = 'CallValidator';
                 }
 
                 // 创建验证类
-                $validate = $this->createValidator($validType, $validateConfig);
+                $validator = $this->createValidator($validType, $validatorConfig);
                 // 开始验证
-                $result = $this->execValidator($rule,$attributes,$validate);
+                $result = $this->execValidator($rule,$validForm,$validator);
             }
-
+            // 收集验证结果
             $resultList[] = $result;
         }
 
@@ -496,20 +455,15 @@ class Validation
 
     /**
      * @param Rule $rule 验证规则对象
-     * @param array|object $attributes 格式 ['key'=>'name',...]
+     * @param ValidForm $validForm 格式 ['key'=>'name',...]
      * @param Validator $validate
      * @return ValidateResult
      */
-    protected function execValidator($rule,$attributes,$validate)
+    protected function execValidator(Rule $rule,ValidForm $validForm,Validator $validate):ValidateResult
     {
-        $validate->setAttributes($attributes);
-        if (is_object($attributes)) {
-            $attrs = $rule->getAttrs();
-            $result = $validate->validateAttrs($attributes,$attrs);
-        } else {
-            $values = $rule->getValues($attributes);
-            $result = $validate->validateValues($values);
-        }
+        $validate->setValidForm($validForm);
+        $values = $rule->getValues($validForm);
+        $result = $validate->validateValues($values);
 
         return $result;
     }
@@ -520,22 +474,15 @@ class Validation
      *<pre>
      *　略
      *</pre>
-     * @param array $attrs 格式 ['name',...]
-     * @param object|array $attributes 对象
+     * @param array $keys 格式 ['name',...]
+     * @param ValidForm $validForm 对象
      * @return array
      */
-    public function getValues($attrs,$attributes)
+    protected function getValueFromVaildForm(array $keys,ValidForm $validForm):array
     {
         $values = [];
-
-        if (is_object($attributes)) {
-            foreach ($attrs as $attr) {
-                $values[$attr] = $attributes->$attr;
-            }
-        } else {
-            foreach ($attrs as $key=>$name) {
-                $values[$key] = isset($attributes[$name]) ? $attributes[$name] : null;
-            }
+        foreach ($keys as $key=>$name) {
+            $values[$key] = $validForm->has($name) ? $validForm[$name] : null;
         }
 
         return $values;
@@ -552,7 +499,7 @@ class Validation
      * @param Rule $rule 验证规则对象
      * @return ValidateResult
      */
-    public function resolveAndRuleResult($resultList,Rule $rule)
+    protected function resolveAndRuleResult(array $resultList,Rule $rule):ValidateResult
     {
         /** @var ValidateResult $result*/
         $message = '';
@@ -595,7 +542,7 @@ class Validation
      * @param Rule $rule 验证规则对象
      * @return ValidateResult
      */
-    protected function resolveOrRuleResult($resultList,Rule $rule)
+    protected function resolveOrRuleResult(array $resultList,Rule $rule):ValidateResult
     {
         /** @var ValidateResult $result*/
         $validResult = false;
@@ -639,7 +586,7 @@ class Validation
      * @param array $validateType 验证类型名称
      * @return boolean true 须解析，不是有效的验证方法,false 无须解析,有消息验证方法,可执行验证
      */
-    protected function isResolveValidType($validateType)
+    protected function isResolveValidType(array $validateType):bool
     {
         $operatorCharacter  = $validateType[0];
 
@@ -677,14 +624,15 @@ class Validation
      * @return Validator|null
      * @throws Exception 验证类类不存在
      */
-    public function createValidator($validateType,$config = [])
+    public function createValidator(string $validateType,array $config = []):Validator
     {
         $config = static::getValidateConfig($validateType,$config);
-        $validatorclass = $config['class'];
-        $validate = new $validatorclass($config,$this);
-        $validate->hvalidation = static::class;
+        $validatorClass = $config['class'];
+        unset($config['class']);
+        $validator = new $validatorClass($config,$this);
+        $validator->hvalidation = static::class;
 
-        return $validate;
+        return $validator;
     }
 
     /**
@@ -698,15 +646,14 @@ class Validation
      * @return Validator|null
      * @throws Exception 验证类类不存在
      */
-    public static function makeValidator($validateType,$config = [])
+    public static function makeValidator(string $validateType,array $config = []):Validator
     {
-
         $config = static::getValidateConfig($validateType,$config);
-        $validatorclass = $config['class'];
-        $validate = new $validatorclass($config,null);
-        $validate->hvalidation = static::class;
+        $validatorClass = $config['class'];
+        $validator = new $validatorClass($config,null);
+        $validator->hvalidation = static::class;
 
-        return $validate;
+        return $validator;
     }
 
     /**
@@ -723,15 +670,12 @@ class Validation
     public static function __callStatic($validateType, $params)
     {
         if (!isset(self::$validators[$validateType])) {
-            throw new Exception('method not exists:' . __CLASS__ . '->' . $validateType);
+            throw new Exception('validate type not exists:' . __CLASS__ . '->' . $validateType);
         }
 
         $config = isset($params[1]) ? $params[1] : [];
 
-        /**@var Validator $validator*/
-        $validator = static::makeValidator($validateType,$config);
-
-        return $validator->validate($params[0]);
+        return static::makeValidator($validateType,$config)->validate($params[0]);
     }
 
     /**
@@ -748,28 +692,18 @@ class Validation
     public function __call($validateType, $params)
     {
         if (!isset(self::$validators[$validateType])) {
-            throw new Exception('method not exists:' . __CLASS__ . '->' . $validateType);
+            throw new Exception('validate type not exists:' . __CLASS__ . '->' . $validateType);
         }
 
         $config = isset($params[1]) ? $params[1] : [];
 
-        /**@var Validator $validator*/
-        $validator = $this->createValidator($validateType,$config);
-
-        return $validator->validate($params[0]);
+        return $this->createValidator($validateType,$config)->validate($params[0]);
     }
 
-    protected static function getValidateConfig($validateType,$config = [])
+    protected static function getValidateConfig(string $validateType,array $config = []):array
     {
         if (isset(self::$validators[$validateType])) {
             $class = self::$validators[$validateType];
-//            if (!isset($class['defmsg'])) {
-//                if (isset($class['message'])) {
-//                    $class['defmsg'] = $class['message'];
-//                    unset($class['message']);
-//                }
-//            }
-
         } else {
             $class = $validateType;
         }
@@ -792,6 +726,29 @@ class Validation
         return $config;
     }
 
+    protected static function buildCustomValidator(string $customValidatorClass):array
+    {
+        $new_class_status = true;
+        if (strpos($customValidatorClass,"@@") !== false) {
+            list($custom_validator_class,$custom_validator_method) = explode("@@",$customValidatorClass);
+            $new_class_status = false;
+        } else if (strpos($customValidatorClass,"@") !== false) {
+            list($custom_validator_class,$custom_validator_method) = explode("@",$customValidatorClass);
+        } else {
+            $custom_validator_class = $customValidatorClass;
+        }
+
+        if (empty($custom_validator_method)) {
+            $custom_validator_method = 'install';
+        }
+
+        if ($new_class_status) {
+            return [new $custom_validator_class(),$custom_validator_method];
+        } else {
+            return [$custom_validator_class,$custom_validator_method];
+        }
+    }
+
     /**
      * 安装验证器
      * @param string|array $target_namespace 目标类命名空间路径
@@ -806,7 +763,6 @@ class Validation
         // 判断是命令空间还是路径
         if (is_array($target_namespace)) {
             $only_target_class = false;
-            $reflectionClass = new \ReflectionClass($target_namespace);
             list($base_path,$base_class_namespace) = $target_namespace;
         } else {
             $reflectionClass = new \ReflectionClass($target_namespace);

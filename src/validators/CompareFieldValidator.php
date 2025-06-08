@@ -88,12 +88,12 @@ class CompareFieldValidator extends Validator
      * @return boolean
      * @throws Exception
      */
-    protected function validateValue($value,$name = null)
+    protected function validateValue($value,$name = null):bool
     {
         $this->addParam('field2',$name);
         $this->addParam('field1',$this->field);
 
-        $comparefieldValue = $this->getFormatValue($this->getAttribute($this->field));
+        $comparefieldValue = $this->getFormatValue($this->validForm[$this->field]);
 
         if (!in_array($this->operator,$this->operatorList)) {
             throw  new Exception('validate type compare operator invalid');

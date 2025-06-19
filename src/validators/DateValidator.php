@@ -42,12 +42,15 @@ class DateValidator extends Validator
     {
         $this->addParam('format',$this->format);
         $date = DateTime::createFromFormat($this->format, $value);
-        $errors = DateTime::getLastErrors();
-        if ($date === false || $errors['error_count'] || $errors['warning_count']) {
+        if ($date === false) {
             return false;
-        } else {
+        }
+        $errors = DateTime::getLastErrors();
+        if ($errors === false) {
             return true;
         }
+
+        return ($errors['error_count'] + $errors['warning_count']) === 0;
     }
 
 

@@ -6,7 +6,8 @@ logs
 .DS_Store
 /*.bat
 /*.ini
-/*.txt
 /vendor
 /*.lock
 /*.txt
+/build
+.phpunit.result.cache

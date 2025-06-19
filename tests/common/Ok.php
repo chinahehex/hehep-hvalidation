@@ -1,7 +1,6 @@
 <?php
 namespace hvalidation\tests\common;
-use  hehe\core\hcontainer\scan\base\Annotation;
-
+use hehe\core\hcontainer\ann\base\Annotation;
 use Attribute;
 
 /**

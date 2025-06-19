@@ -390,6 +390,26 @@ class Validation
     }
 
     /**
+     * 验证单个值
+     * @param $value
+     * @param $validators
+     * @return bool
+     * @throws Exception
+     */
+    public function doValidValue($value,array $validators = []):bool
+    {
+        foreach ($validators as $validatorConfig) {
+            $name = array_shift($validatorConfig);
+            $validator = Validation::makeValidator($name,$validatorConfig);
+            if ($validator->validate($value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * 验证单个规则
      *<B>说明：</B>
      *<pre>
